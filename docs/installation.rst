@@ -1,6 +1,7 @@
 Installation
 ============
 
+
 .. contents::
    :depth: 2
 
@@ -27,9 +28,7 @@ Conda
 From source
 ++++++++++++
 
-On a Linux machine, download a copy of MIDAS 2.0 from our GitHub repository, and
-install MIDAS 2.0 from the source code.
-
+To install MIDAS 2.0 from source code, run
 
 .. code-block:: shell
 
