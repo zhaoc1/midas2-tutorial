@@ -29,4 +29,6 @@ Contents
 
    installation
    quickstart
-   usage
+   download_midasdb
+   midas
+   build_your_own

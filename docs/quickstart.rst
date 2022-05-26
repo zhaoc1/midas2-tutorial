@@ -82,7 +82,9 @@ Single-Sample SNV Calling
 
 We first run the single-sample SNV analysis for each sample.
 The pileup summary for ``sample1`` will be generated under the directory
-``midas2_output/sample1/snps/snps_summary.tsv``.
+``midas2_output/sample1/snps/snps_summary.tsv``, which summarize the read mapping
+and pileup results of the species in the restricted species profile
+``median_marker_coverage > 2``.
 
 .. code-block:: shell
 
@@ -107,7 +109,7 @@ across-samples SNV calling.
 .. code-block:: shell
 
   echo -e "sample_name\tmidas_outdir" > list_of_samples.tsv
-  ls reads | awk -F '_' '{print $1}' | awk -v OFS='\t' -v dir=$midas_outdir '{print $1, dir}' >> list_of_samples.tsv
+  ls reads | awk -F '_' '{print $1}' | awk -v OFS='\t' '{print $1, midas2_output}' >> list_of_samples.tsv
 
 
 We can take a look at the ``list_of_samples.tsv`` by ::
@@ -150,7 +152,7 @@ The pileup summary for ``sample1`` will be generated under the directory
       --midasdb_dir my_midasdb_uhgg \
       --num_cores 4 \
       midas2_output
-done
+  done
 
 
 Across-Sample CNV Calling

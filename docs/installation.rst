@@ -56,4 +56,6 @@ We've included a unit test script should should verify all the dependencies are 
 and all the modules of MIDAS 2.0 can run properly.
 We strongly recommend running this after installing MIDAS 2.0: ::
 
-  $ bash tests/run_analysis.sh 8
+  $ bash tests/test_analysis.sh 8
+
+The example script run the analysis testing with 8 cores.
