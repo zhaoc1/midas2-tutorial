@@ -30,5 +30,9 @@ Contents
    installation
    quickstart
    download_midasdb
+   species
    midas
    build_your_own
+   template
+   cnv
+   snv

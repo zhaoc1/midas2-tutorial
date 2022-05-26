@@ -32,6 +32,8 @@ install the dependencies. We do not currently support non-Linux environments.
 Alternative installation procedures are detailed in :doc:`this page <installation>`.
 
 
+.. _example_data:
+
 Example Data
 ------------
 
@@ -50,6 +52,11 @@ to a new folder called ``my_midasdb_uhgg`` ::
   $ midas2 database --download --midasdb_name uhgg --midasdb_dir my_midasdb_uhgg
 
 
+..
+  TODO: Add links to the more completely explanations of each step
+  elsewhere in the wiki.
+
+
 Identify Abundant Species
 *************************
 
@@ -65,13 +72,6 @@ Identify Abundant Species
         --num_cores 4 \
         midas2_output
     done
-
-
-.. tip::
-
-  This is designed only to detect sufficiently abundant in each sample.
-  It is not intended to quantify species abundance.
-
 
 
 Run SNV Module
@@ -103,8 +103,13 @@ and pileup results of the species in the restricted species profile
 Across-Samples SNV Calling
 --------------------------
 
+.. _prepare_sample_list:
+
+Prepare Sample List
++++++++++++++++++++
+
 A tab-separated file listing the ``sample_name`` and ``midas_output`` is required for
-across-samples SNV calling.
+across-samples analysis.
 
 .. code-block:: shell
 
@@ -112,10 +117,13 @@ across-samples SNV calling.
   ls reads | awk -F '_' '{print $1}' | awk -v OFS='\t' '{print $1, midas2_output}' >> list_of_samples.tsv
 
 
-We can take a look at the ``list_of_samples.tsv`` by ::
+We can take a look at the ``list_of_samples.tsv``: ::
 
   $ cat list_of_samples.tsv
 
+
+Population SNVs
++++++++++++++++
 
 Now we are ready to compute the population SNVs across the two samples:
 

@@ -56,6 +56,7 @@ command:
 This requires a large amount of data transfer and storage: 93 GB for ``MIDASDB-uhgg``
 and 539 GB for ``MIDASDB-gtdb``.
 
+
 Download Selected Species
 *************************
 
@@ -63,35 +64,23 @@ Instead, we recommend that users take advantage of species-level database
 sharding to download and decompress only the necessary portions of a
 MIDASDB.
 
+If we the following list of species ids (here an example with only two species) to a plain text file named `species.list`: ::
 
-For a collection of samples, we can first merge the abundant specie profiling results
-across sample:
+  $ echo -e "100078\n102478" > species_list.txt
 
-.. code-block:: shell
-
-  midas2 merge_species \
-    --samples_list list_of_samples.tsv \
-    --midasdb_name uhgg \
-    --midasdb_dir my_midasdb_uhgg \
-    --num_cores 4 \
-    midas2_output/merge
-
-Second, we can get the list of species that is present in at least one sample:
+we can then run the following to preload all of the data needed for these two species:
 
 .. code-block:: shell
 
-  awk '$6 > 1 {print $6}' midas2_output/merge/species/species_prevalence.tsv > all_species_list.tsv
+    MIDAS 2.0 database \
+        --download
+        --midasdb_name uhgg \
+        --midasdb_dir my_midasdb_uhgg \
+        --species_list species.list
 
 
-Last, we can download the MIDAS DB only for species in the ``all_species_list.tsv``:
-
-.. code-block:: shell
-
-  midas2 database --download \
-    --midasdb_name uhgg \
-    --midasdb_dir my_midasdb_uhgg \
-    --species_list my_species_list.tsv
-
+Advanced users may be interested in downloading species present in a list of samples,
+:ref:`refer to this page <database_download>`.
 
 It is also possible for advance users to :doc:`contruct their own MIDASDB <build_your_own>`
-from a custom genome collection (e.g. for metagenome assembled genomes)
+from a custom genome collection (e.g. for metagenome assembled genomes).

@@ -9,7 +9,14 @@ Species Detection
 
 
 
-.. _snv_profiling:
-
-SNV Profiling
+SNV Calling
 *************
+
+
+:ref:`abundant species detection <module_snv_calling>`.
+
+
+CNV Calling
+*************
+
+:ref:`abundant species detection <module_cnv_calling>`.
