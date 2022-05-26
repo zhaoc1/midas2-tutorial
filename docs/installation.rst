@@ -47,3 +47,13 @@ Docker
 
   docker pull zhaoc1/MIDAS 2.0:latest
   docker run --volume "/home/ubuntu/.aws":"/root/.aws":ro --rm -it MIDAS 2.0:latest
+
+
+Testing
+++++++++
+
+We've included a unit test script should should verify all the dependencies are correctly installed
+and all the modules of MIDAS 2.0 can run properly.
+We strongly recommend running this after installing MIDAS 2.0: ::
+
+  $ bash tests/run_analysis.sh 8
