@@ -142,7 +142,13 @@ Second, infer SCGs for all the genomes and build marker database:
     --midasdb_name newdb --midasdb_dir my_new_midasdb \
     --debug --force
 
-Third, build species pangenomes
+
+Pan-genome
+----------
+
+Third, build species pangenomes:
+
+.. code-block:: shell
 
   midas2 build_pangenome --species all \
     --midasdb_name newdb --midasdb_dir my_new_midasdb \

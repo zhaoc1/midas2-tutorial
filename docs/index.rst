@@ -7,6 +7,11 @@ Welcome to MIDAS 2.0
 ====================================
 
 
+.. note::
+
+   This project is under active development.
+
+
 Metagenomic Intra-Species Diversity Analysis System 2.0 (MIDAS 2.0) is an integrated pipeline
 for profiling single nucleotide variants (SNVs) and gene copy number variants (CNVs)
 in microbial populations. MIDAS 2.0 implements the same analyses as the original
@@ -30,6 +35,7 @@ Contents
    quickstart
    download_midasdb
    midas
+   interface
    species
    cnv
    snv
