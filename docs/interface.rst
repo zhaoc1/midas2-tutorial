@@ -10,7 +10,6 @@ MIDAS 2.0 Interface
 Common CLI Options
 ******************
 
-TODO: output dir, sample name, database dir/name,
 
 Output Directory
 ----------------

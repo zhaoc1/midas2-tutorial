@@ -21,6 +21,8 @@ the computational challenges presented by increasingly large reference genome da
 
 MIDAS 2.0 was developed by `Chunyu Zhao <chunyu.zhao@czbiohub.org>`_ and Boris Dimitrov
 in the `Pollard Lab <https://docpollard.org/>`_ at Chan Zuckerberg Biohub.
+MIDAS 2.0 expands on the original MIDAS developed by `Stephen Nayfach <snayfach@gmail.com>`_.
+
 
 Source code is `available on GitHub
 <https://github.com/czbiohub/MIDAS2.0.git>`_.
