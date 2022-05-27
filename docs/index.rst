@@ -29,11 +29,11 @@ Contents
 
    quickstart
    download_midasdb
-   species
    midas
-   build_your_own
-   template
+   species
    cnv
    snv
    installation
    advanced_topics
+   wiki
+   template

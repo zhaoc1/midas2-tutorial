@@ -84,3 +84,71 @@ Therefore, for large collections of samples, we recommend higher CPU counts and 
 optimally balance memory and I/O usage, especially for highly prevalent species.
 Users can adjust the number of sites per chunk via ``chunk_size`` (default value = 1000000).
 MIDAS 2.0 also has a ``robust_chunk`` option, where assigning different chunk sizes to different species based on the species prevalence.
+
+
+
+.. _build_your_own_database:
+
+Build Your Own MIDASDB
+**********************
+
+MIDAS 2.0 users can locally build a new MIDASDB for a custom collection of genomes.
+The target layout of MIDASDB can be found at :ref:`MIDASDB Layout<db_layout>`.
+This section is focused specifically on the database construction commands.
+
+
+TOC
+---
+
+To start with, users need to organize the genomes in a specific format and produce the TOC ``genomes.tsv`` as described in the MIDASDB Layout.
+
+We have prepared a toy collections of genomes at the ``tests/genomes``, and we will build the new MIDASDB under the directory of ``tests/genomes``.
+There are two command-line parameters that users need to pass:
+
+- ``--debug``: keep the local file after successfully build the database
+- ``--force``: re-build the database even if already locally exists
+
+MIDAS 2.0 reserved the ``--midasdb_name newdb`` for building custome MIDASDB, and the new MIDASDB will be built at ``--midasdb_dir``.
+
+Rep-genome
+----------
+
+First, annotate all the genomes:
+
+.. code-block:: shell
+
+  midas2 annotate_genome --species all
+    --midasdb_name newdb --midasdb_dir my_new_midasdb \
+    --debug --force
+
+  midas2 build_midasdb --generate_gene_feature \
+    --genomes all \
+    --midasdb_name newdb --midasdb_dir my_new_midasdb
+    --debug --force
+
+
+SCG Markers
+-----------
+
+Second, infer SCGs for all the genomes and build marker database:
+
+.. code-block:: shell
+
+  midas2 infer_markers --genomes all
+    --midasdb_name newdb --midasdb_dir my_new_midasdb \
+    --debug --force
+
+  midas2 build_midasdb --build_markerdb \
+    --midasdb_name newdb --midasdb_dir my_new_midasdb \
+    --debug --force
+
+Third, build species pangenomes
+
+  midas2 build_pangenome --species all \
+    --midasdb_name newdb --midasdb_dir my_new_midasdb \
+    --debug --force
+
+  midas2 build_midasdb --generate_cluster_info \
+    --species all \
+    --midasdb_name newdb --midasdb_dir my_new_midasdb \
+    --debug --force

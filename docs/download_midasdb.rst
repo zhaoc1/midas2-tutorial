@@ -82,5 +82,5 @@ we can then run the following to preload all of the data needed for these two sp
 Advanced users may be interested in downloading species present in a list of samples,
 :ref:`refer to this page <database_download>`.
 
-It is also possible for advance users to :doc:`contruct their own MIDASDB <build_your_own>`
+It is also possible for advance users to :ref:`contruct their own MIDASDB <build_your_own_database>`
 from a custom genome collection (e.g. for metagenome assembled genomes).

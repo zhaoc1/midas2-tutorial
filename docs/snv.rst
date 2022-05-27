@@ -13,7 +13,7 @@ The Single Nucleotide Variant (SNV) module proceeds in two steps:
 
 The first step can be run in parallel.
 We presuppose users have already completed the :ref:`species selection<module_single_species_selection>`
-and have ``midas2_output/species/species_profile.tsv`` ready for each sample.
+and have ``midas2_output/sample1/species/species_profile.tsv`` ready for each sample.
 Alternatively, advanced users can pass a *prebuilt rep-genome index* (:ref:) ready for single-sample SNV analysis.
 
 
@@ -84,10 +84,9 @@ In this document, we will keep using the :ref:`example data<example_data>` from 
 
 A typical call to ``run_snps`` for one sample is:
 
-
 .. code-block:: shell
 
-  midas2 merge_species \
+  midas2 run_snps \
     --sample_name sample1 \
     -1 reads/sample1_R1.fastq.gz \
     --midasdb_name uhgg \
@@ -139,7 +138,7 @@ This file ``midas2_output/samples1/snps/snps_summary.tsv`` reports read alignmen
 -   ``mean_coverage``: mean read depth across all ``covered_bases`` (aka vertical genome coverage)
 
 
-**Per-species read pileup results**
+**Per-species Read Pileup**
 
 This file ``midas2_output/samples1/snps/102506.snps.tsv.lz4`` reports the per-species read pileup for all the genomic sites covered by at least two post-filered reads.
 
@@ -162,16 +161,18 @@ This file ``midas2_output/samples1/snps/102506.snps.tsv.lz4`` reports the per-sp
 
 
 Across-Samples
-+++++++++++++++++++++++++++++++
++++++++++++++++
 
 **snps_summary.tsv**
 
 This file ``midas2_output/merge/snps/snps_summary.tsv`` merge all single-sample pileup summary for all the species in the :ref:`single-sample pileup summary<single_sample_snv_summary>`.
+The reported columns ``genome_length``:``mean_coverage`` are the same with single-sample SNV summary.
+
 
 .. csv-table::
   :align: left
 
-  sample_name,species_id,genome_length,covered_bases,total_depth,aligned_reads,mapped_reads,fraction_covered,mean_coverage
+  *sample_name*,*species_id*,*genome_length*,*covered_bases*,*total_depth*,*aligned_reads*,*mapped_reads*,*fraction_covered*,*mean_coverage*
   SRR172902,100122,2560878,2108551,10782066,248700,207047,0.823,5.113
   SRR172903,100122,2560878,2300193,39263110,1180505,820736,0.898,17.069
 
@@ -181,12 +182,12 @@ This file ``midas2_output/merge/snps/snps_summary.tsv`` merge all single-sample 
 
 **Per-species SNPs Info File**
 
-This file ``midas2_output/samples1/snps/102506.snps_info.tsv.lz4`` reports the population SNV's metadata.
+This file ``midas2_output/merge/snps/102506.snps_info.tsv.lz4`` reports the population SNV's metadata.
 
 .. csv-table::
   :align: left
 
-    site_id,major_allele,minor_allele,sample_counts,snp_type,rc_A,rc_C,rc_G,rc_T,sc_A,sc_C,sc_G,sc_T,locus_type,gene_id,site_type,amino_acids
+    *site_id*,*major_allele*,*minor_allele*,*sample_counts*,*snp_type*,*rc_A*,*rc_C*,*rc_G*,*rc_T*,*sc_A*,*sc_C*,*sc_G*,*sc_T*,*locus_type*,*gene_id*,*site_type*,*amino_acids*
     gnl|Prokka|UHGG000587_14|34360|A,A,C,2,bi,26,10,0,0,2,2,0,0,CDS,UHGG000587_02083,4D,T\\,T\\,T\\,T
     gnl|Prokka|UHGG000587_11|83994|T,G,T,2,bi,0,0,11,45,0,0,2,2,IGR,None,None,None
 
@@ -209,27 +210,27 @@ This file ``midas2_output/samples1/snps/102506.snps_info.tsv.lz4`` reports the p
 -   ``amino_acids``: amino acids encoded by 4 possible alleles
 
 
-**Per-species SNPs Freq File**
+**Per-species SNPs Freq Matrix**
 
-This file ``midas2_output/samples1/snps/102506.snps_freq.tsv.lz4`` reports site-by-sample allele frequency matrix of population minor allele.
+This file ``midas2_output/merge/snps/102506.snps_freq.tsv.lz4`` reports site-by-sample allele frequency matrix of population minor allele.
 
 .. csv-table::
   :align: left
 
-  site_id,SRR172902,SRR172903
+  *site_id*,*SRR172902*,*SRR172903*
   gnl|Prokka|UHGG000587_11|83994|T,0.692,0.837
   gnl|Prokka|UHGG000587_14|34360|A,0.300,0.269
 
 
-**Per-species SNPs Depth File**
+**Per-species SNPs Depth Matrix**
 
-This file ``midas2_output/samples1/snps/102506.snps_freq.tsv.lz4`` reports site-by-sample site depth matrix.
+This file ``midas2_output/merge/snps/102506.snps_freq.tsv.lz4`` reports site-by-sample site depth matrix.
 Only accounts for the alleles matching the population major and/or minor allele.
 
 .. csv-table::
   :align: left
 
-  site_id,SRR172902,SRR172903
+  *site_id*,*SRR172902*,*SRR172903*
   gnl|Prokka|UHGG000587_11|83994|T,13,43
   gnl|Prokka|UHGG000587_14|34360|A,10,26
 
