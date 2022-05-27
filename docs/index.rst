@@ -36,4 +36,5 @@ Contents
    installation
    advanced_topics
    wiki
+   acknowledgements
    template
