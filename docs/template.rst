@@ -16,6 +16,9 @@ Level 2
 World
 
 Level 3
-*******
++++++++
 
 Bye
+
+..
+  I am invisible notes.

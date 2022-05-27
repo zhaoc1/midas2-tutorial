@@ -184,6 +184,9 @@ We can merge the per-sample CNV results:
     --num_cores 4 \
     midas2_output/merge
 
+..
+  TODO: If you do quickstart correctly, this is the output you will see.
+
 
 Result Layout
 **************

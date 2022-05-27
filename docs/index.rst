@@ -37,10 +37,11 @@ Contents
    midas
    interface
    species
-   cnv
    snv
+   cnv
    installation
    advanced_topics
    wiki
+   glossary
    acknowledgements
    template
