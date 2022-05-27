@@ -33,8 +33,8 @@ Contents
    :maxdepth: 1
 
    quickstart
-   download_midasdb
    midas
+   download_midasdb
    interface
    species
    snv

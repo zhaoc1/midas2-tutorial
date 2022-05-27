@@ -43,6 +43,8 @@ Navigate to the ``tests`` directory ::
   $ cd tests
 
 
+.. _init_db:
+
 Pre-download SCG Genes
 **********************
 

@@ -28,7 +28,7 @@ with the prebuilt ``uhgg`` MIDASDB and that the local mirror is in a subdirector
 ``my_midasdb_uhgg``.
 
 We highly recommend that first time users initialize a local MIDASDB. This command
-will download the minimal information needed to run the :ref:`abundant species detection <species_detection>`.
+will download the minimal information needed to run the species selection, as in :ref:`here <init_db>`.
 
 .. code-block:: shell
 
