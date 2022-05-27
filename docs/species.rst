@@ -1,7 +1,3 @@
-
-.. _module_species_selection:
-
-
 Species Selection
 =================
 
@@ -19,6 +15,8 @@ sample.
 .. contents::
    :depth: 3
 
+
+.. _module_single_species_selection:
 
 Single-Sample Species Profiling
 **********************************
@@ -55,7 +53,7 @@ Expected Output
 species_profile.tsv
 +++++++++++++++++++
 
-The primary output of ``run_species`` command is ``midas2_output/samples1/species_profile.tsv`` which
+The primary output of ``run_species`` command is ``midas2_output/samples1/species/species_profile.tsv`` which
 describes the coverage of each species' marker genes in the sample.
 Species are sorted in decreasing order of ``median_marker_coverage``.
 Only species with more than two marker genes covered with more than two reads (a very low bar) are reported.
@@ -76,7 +74,6 @@ Only species with more than two marker genes covered with more than two reads (a
 
 We will later use the ``median_marker_coverage`` and ``unique_fraction_covered``
 to select **sufficiently abundant species** for the downstream single-smaple SNV or CNV analysis.
-
 
 
 Across-Samples Species Merging

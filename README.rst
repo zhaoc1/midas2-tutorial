@@ -1,9 +1,6 @@
-Template for the Read the Docs tutorial
-=======================================
-
-This GitHub template includes fictional Python library
-with some basic Sphinx docs.
+MIDA 2.0 Documentation
+======================
 
 Read the tutorial here:
 
-https://docs.readthedocs.io/en/stable/tutorial/
+https://midas2-tutorial.readthedocs.io/en/stable/

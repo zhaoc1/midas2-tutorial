@@ -1,4 +1,4 @@
-Quickstart
+Template
 ============
 
 .. contents::
@@ -16,11 +16,7 @@ Install MIDAS 2.0
 Pre-download SCG Genes
 **********************
 
-Download the universal single copy genes for MIDAS reference database (MIDAS DB) of ``uhgg``
-to a new folder called ``my_midasdb_uhgg`` ::
-
-  $ midas2 database --download --midasdb_name uhgg --midasdb_dir my_midasdb_uhgg
-
+Download the universal single copy genes for MIDAS reference database (MIDAS DB)
 
 
 Run SNV Module
@@ -35,7 +31,9 @@ The pileup summary for ``sample1`` will be generated under the directory
 and pileup results of the species in the restricted species profile
 ``median_marker_coverage > 2``.
 
-.. code-block:: shell
+.. csv-table::
+  :align: left
+
 
   for sample_name in sample1 sample2
   do

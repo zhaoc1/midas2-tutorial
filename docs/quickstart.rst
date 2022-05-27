@@ -108,7 +108,7 @@ Across-Samples SNV Calling
 Prepare Sample List
 +++++++++++++++++++
 
-A tab-separated file listing the ``sample_name`` and ``midas_output`` is required for
+A tab-separated sample manifest file listing the ``sample_name`` and ``midas_output`` is required for
 across-samples analysis.
 
 .. code-block:: shell

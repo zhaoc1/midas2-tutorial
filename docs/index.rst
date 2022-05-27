@@ -27,7 +27,6 @@ Contents
 .. toctree::
    :maxdepth: 1
 
-   installation
    quickstart
    download_midasdb
    species
@@ -36,3 +35,5 @@ Contents
    template
    cnv
    snv
+   installation
+   advanced_topics
