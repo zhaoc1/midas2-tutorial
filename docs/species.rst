@@ -101,11 +101,12 @@ result for all the samples listed in the :ref:`samples_list<prepare_sample_list>
 Expected Output
 ---------------
 
+.. _species_prevalence:
+
 species_prevalence.tsv
 ++++++++++++++++++++++
 
 The primary output of the across-samples species merging analysis is the file ``midas2_output/merge/species/species_prevalence.tsv``.
-
 
 .. csv-table::
   :align: left
@@ -121,6 +122,28 @@ The primary output of the across-samples species merging analysis is the file ``
 -   ``mean_coverage``: average ``median_marker_coverge`` across samples
 -   ``sample_counts``: number of samples with ``median_marker_coverge >= min_cov``
 
+
+**Species-by-sample Matrix**
+
+MIDAS 2.0 reports a few species-by-sample matrix that can be found at: ``midas2_output/merge/species``.
+
+- Species-by-sample median marker coverage matrix is located at ``midas2_output/merge/species/species_marker_median_coverage.tsv``.
+
+.. csv-table::
+  :align: left
+
+  *species_id*,*sample1*,*sample2*
+  102337,3.926,28.484
+  102506,0.951,4.983
+
+-  Species-by-sample unique fraction covered matrix is located at ``midas2_output/merge/species/species_unique_fraction_covered.tsv``.
+
+.. csv-table::
+  :align: left
+
+  *species_id*,*sample1*,*sample2*
+  102337, 1,1
+  102506,0.92,1
 
 
 .. _database_download:

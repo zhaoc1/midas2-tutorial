@@ -173,8 +173,8 @@ The reported columns ``genome_length``:``mean_coverage`` are the same with singl
   :align: left
 
   *sample_name*,*species_id*,*genome_length*,*covered_bases*,*total_depth*,*aligned_reads*,*mapped_reads*,*fraction_covered*,*mean_coverage*
-  SRR172902,100122,2560878,2108551,10782066,248700,207047,0.823,5.113
-  SRR172903,100122,2560878,2300193,39263110,1180505,820736,0.898,17.069
+  sample1,100122,2560878,2108551,10782066,248700,207047,0.823,5.113
+  sample2,100122,2560878,2300193,39263110,1180505,820736,0.898,17.069
 
 -  ``sample_name``: unique sample name
 -  ``species_id``: six-digit species id
@@ -217,7 +217,7 @@ This file ``midas2_output/merge/snps/102506.snps_freq.tsv.lz4`` reports site-by-
 .. csv-table::
   :align: left
 
-  *site_id*,*SRR172902*,*SRR172903*
+  *site_id*,*sample1*,*sample2*
   gnl|Prokka|UHGG000587_11|83994|T,0.692,0.837
   gnl|Prokka|UHGG000587_14|34360|A,0.300,0.269
 
@@ -230,7 +230,7 @@ Only accounts for the alleles matching the population major and/or minor allele.
 .. csv-table::
   :align: left
 
-  *site_id*,*SRR172902*,*SRR172903*
+  *site_id*,*sample1*,*sample2*
   gnl|Prokka|UHGG000587_11|83994|T,13,43
   gnl|Prokka|UHGG000587_14|34360|A,10,26
 

@@ -129,8 +129,8 @@ The reported columns ``covered_genes``:``marker_coverage`` are the same with sin
   :align: left
 
   *sample_name*,*species_id*,*pangenome_size*,*covered_genes*,*fraction_covered*,*mean_coverage*,*aligned_reads*,*mapped_reads*,*marker_coverage*
-  SRR172902,100122,  29165,,   2535,,   0.087,,, 4.723,,  263395,, 53006,, 1.435
-  SRR172903,100122,  29165,,   3212,,   0.110,,, 16.095,, 1447684,,263878,,10.713
+  sample1,100122,  29165,,   2535,,   0.087,,, 4.723,,  263395,, 53006,, 1.435
+  sample2,100122,  29165,,   3212,,   0.110,,, 16.095,, 1447684,,263878,,10.713
 
 - ``sample_name``: unique sample name
 - ``species_id``: six-digit species id
@@ -143,7 +143,7 @@ This file ``midas2_output/merge/genes/102506.genes_copynum.tsv.lz4`` reports gen
 .. csv-table::
   :align: left
 
-  *gene_id*,*SRR172902*,*SRR172903*
+  *gene_id*,*sample1*,*sample2*
   UHGG000587_00401,33.969154,19.891455
   UHGG000587_01162,5.703398,2.821237
   UHGG000587_00962,2.370930,0.289325
@@ -156,7 +156,7 @@ This file ``midas2_output/merge/genes/102506.genes_preabs.tsv.lz4`` reports gene
 .. csv-table::
   :align: left
 
-   *gene_id*,*SRR172902*,*SRR172903*
+   *gene_id*,*sample1*,*sample2*
    UHGG000587_00401,1,1
    UHGG000587_01162,1,1
    UHGG000587_00962,1,0
@@ -169,7 +169,7 @@ This file ``midas2_output/merge/genes/102506.genes_depth.tsv.lz4`` reports gene-
 .. csv-table::
   :align: left
 
-  *gene_id*,*SRR172902*,*SRR172903*
+  *gene_id*,*sample1*,*sample2*
   UHGG000587_00401,48.747945,213.090622
   UHGG000587_01162,8.184746,30.222978
   UHGG000587_00962,3.402439,3.099448

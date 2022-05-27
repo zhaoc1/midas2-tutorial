@@ -152,3 +152,70 @@ Third, build species pangenomes
     --species all \
     --midasdb_name newdb --midasdb_dir my_new_midasdb \
     --debug --force
+
+
+Build Your Own Genome Index
+***************************
+
+
+MIDAS 2.0 builds sample-specific rep-genome or pan-genome index for species in the restricted species profile.
+However, we recognize the needs of using one comprehensive list of species across samples in the same study.
+And in this section, we will go over the steps of building one genome index a list of customized species across a given panel of samples.
+
+We presuppose users have already completed the :ref:`across-samples species profiling<species_prevalence>`
+and have ``midas2_output/merge/species/species_prevalence.tsv`` ready for the given panel of samples.
+
+Species Selection
+-----------------
+
+Users can select species based on the prevalence from the ``species_prevalence.tsv`` file, e.g. the list of speices that is present in at least one sample,
+by customizing the ``--select_by`` and ``--selectd_threshold`` to the ``build_bowtie2db`` command.
+
+Build Genome Index
+------------------
+
+In this section, we will keep using the :ref:`example data<example_data>` from Quickstart.
+
+.. code-block:: shell
+
+  midas2 build_bowtie2db \
+    --midasdb_name uhgg --midasdb_dir my_midasdb_uhgg \
+    --select_by sample_counts \
+    --select_threshold 2 \
+    --bt2_indexes_name repgenome \
+    --bt2_indexes_dir one_bt2_indexes \
+    --num_cores 8
+
+And users can locate the generated rep-genome database at ``one_bt2_indexes/repgenome``, and the list of species in the rep-genome is at ``one_bt2_indexes/repgenome.species``.
+
+Use Prebuilt Genome Index
+-------------------------
+
+If taking this approach, for the single-sample SNV or CNV analysis, users can pass the pre-built rep-genome to ``run_snps`` analysis (pan-genome for ``run_genes``), as following:
+
+.. code-block:: shell
+
+  midas2 run_snps
+    --sample_name sample1 \
+    -1 reads/sample1_R1.fastq.gz \
+    --midasdb_name uhgg \
+    --midasdb_dir my_midasdb_uhgg \
+    --prebuilt_bowtie2_indexes one_bt2_indexes/repgenome \
+    --prebuilt_bowtie2_species one_bt2_indexes/repgenome.species \
+    --select_threshold=-1 \
+    --num_cores 8 \
+    ${midas_output}
+
+
+
+Developer Notes
+**********************
+
+Export Your Conda Environment
+-----------------------------
+
+.. code-block:: shell
+
+  conda update --all
+  conda clean –all
+  conda env export --no-builds | grep -v "^prefix:" > midas2.updated.yml
