@@ -1,7 +1,6 @@
 MIDAS 2.0 Overview (Under-Construction)
 =======================================
 
-
 .. _species_detection:
 
 Species Detection

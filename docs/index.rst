@@ -30,15 +30,15 @@ Contents
 --------
 
 .. toctree::
-   :maxdepth: 1
+    :maxdepth: 1
 
-   quickstart
-   installation
-   overview
-   species_module
-   cnv_module
-   snv_module
-   download_midasdb
-   advanced_topics
-   wiki
-   template
+    quickstart
+    installation
+    overview
+    species_module
+    snv_module
+    cnv_module
+    download_midasdb
+    advanced_topics
+    wiki
+    template
