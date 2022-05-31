@@ -34,7 +34,7 @@ Contents
 
    quickstart
    installation
-   midas
+   overview
    download_midasdb
    species
    cnv
