@@ -1,8 +1,8 @@
 
 .. _module_cnv_calling:
 
-Copy Number Variant Analysis
-============================
+Module: Copy Number Variant Analysis
+=============================================
 
 Similar to the SNV module, the Copy Number Variant (CNV) module also proceeds in two steps:
 

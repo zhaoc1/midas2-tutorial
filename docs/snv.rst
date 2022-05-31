@@ -2,8 +2,8 @@
 .. _module_snv_calling:
 
 
-Single Nucleotide Variant Analysis
-==================================
+Module: Single Nucleotide Variant Analysis
+===================================================
 
 
 The Single Nucleotide Variant (SNV) module proceeds in two steps:

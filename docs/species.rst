@@ -1,5 +1,5 @@
-Species Selection
-=================
+Module: Species Selection
+==================================
 
 
 Reference-based metagenotyping depends crucially on the choice of reference sequences and
