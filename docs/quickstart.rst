@@ -37,7 +37,7 @@ install the dependencies. We do not currently support non-Linux environments.
 
 
 Alternative installation procedures are also
-:doc: `described elsewhere <installation>`.
+:doc: `described elsewhere <installation>`_.
 However, we'll be using test files kept in this git repository.
 
 ..
