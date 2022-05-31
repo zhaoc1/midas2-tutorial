@@ -16,18 +16,16 @@ We recommend that most users use Conda.
 ..
     TODO: Is this true?
 
+`Install Conda
+<https://conda.io/projects/conda/en/latest/user-guide/install/index.html>`_ if
+you have not already. Then,
+
 .. code-block:: shell
 
   conda config --set channel_priority flexible
   conda install -c zhaoc1 -c anaconda -c bioconda -c conda-forge -c defaults MIDAS 2.0
 
 
-.. note::
-
-   If this is your first time installing Conda, you'll need to add it to your
-   shell's path. If you're running Bash, add the following
-   command your path: ``echo 'export
-   PATH=$PATH:$HOME/miniconda3/bin' > ~/.bashrc``
 
 Docker
 ++++++++++++
