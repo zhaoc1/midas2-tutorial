@@ -35,10 +35,10 @@ Contents
    quickstart
    installation
    overview
-   download_midasdb
    species
    cnv
    snv
+   download_midasdb
    advanced_topics
    wiki
    template
