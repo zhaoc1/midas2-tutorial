@@ -7,15 +7,20 @@ Welcome to MIDAS 2.0
 ====================================
 
 
-Metagenomic Intra-Species Diversity Analysis System 2.0 (MIDAS 2.0) is an integrated pipeline
-for profiling single nucleotide variants (SNVs) and gene copy number variants (CNVs)
-in microbial populations. MIDAS 2.0 implements the same analyses as the original
-`MIDAS <https://github.com/snayfach/MIDAS>`_, but re-engineers to addresses
-the computational challenges presented by increasingly large reference genome databases
+Metagenomic Intra-Species Diversity Analysis System 2.0 (MIDAS 2.0) is an
+integrated pipeline for profiling single nucleotide variants (SNVs) and gene
+copy number variants (CNVs) in shotgun metagenomic reads. MIDAS 2.0 implements
+the same analyses as the original
+`MIDAS <https://github.com/snayfach/MIDAS>`_,
+but re-engineered to addresses the computational challenges presented by
+increasingly large reference genome databases.
 
+MIDAS 2.0 was developed by `Chunyu Zhao <chunyu.zhao@czbiohub.org>`_
+and Boris Dimitrov in the `Pollard Lab <https://docpollard.org/>`_ at
+Chan Zuckerberg Biohub.
 
-MIDAS 2.0 was developed by `Chunyu Zhao <chunyu.zhao@czbiohub.org>`_ and Boris Dimitrov
-in the `Pollard Lab <https://docpollard.org/>`_ at Chan Zuckerberg Biohub.
+..
+    TODO: Link CZB?
 
 Source code is `available on GitHub
 <https://github.com/czbiohub/MIDAS2.0.git>`_.
@@ -28,12 +33,12 @@ Contents
    :maxdepth: 1
 
    quickstart
-   download_midasdb
+   installation
    midas
+   download_midasdb
    species
    cnv
    snv
-   installation
    advanced_topics
    wiki
    template

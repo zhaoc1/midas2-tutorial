@@ -24,10 +24,10 @@ Single-Sample Species Profiling
 Species coverage is estimated via profiling 15 universal single copy marker genes (SCGs), to
 quickly detect the panel of abundant species in the sample.
 
-.. tip::
+.. warning::
 
-  This is designed only to detect sufficiently abundant in each sample.
-  It is not intended to quantify species abundance.
+  This is designed *only* to select species with sufficient coverage in each
+  sample. It is not intended to quantify species abundance.
 
 
 Example Command
@@ -165,6 +165,9 @@ For example, we can get the list of species that is present in at least one samp
 
 Download MIDASDB
 ----------------
+..
+    TODO: Remove this section; just link to the relevant instructions in the
+    Download MIDASDB page as a `tip`.
 
 We can then download the MIDASDB only for species in the ``all_species_list.tsv``:
 
@@ -176,4 +179,5 @@ We can then download the MIDASDB only for species in the ``all_species_list.tsv`
     --species_list my_species_list.tsv
 
 
-Having finished the species selection step, we can now go to the SNV or CNV modules, depending on the scientific aims.
+Having finished the species selection step, we can now go to the SNV or CNV
+modules, depending on the scientific aims.
