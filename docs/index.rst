@@ -35,9 +35,9 @@ Contents
    quickstart
    installation
    overview
-   species
-   cnv
-   snv
+   species_module
+   cnv_module
+   snv_module
    download_midasdb
    advanced_topics
    wiki
