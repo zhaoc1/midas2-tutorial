@@ -12,7 +12,7 @@ SNV Calling
 *************
 
 
-:ref: `<module_snv_calling>`_.
+:ref:`<module_snv_calling>`_.
 
 
 CNV Calling

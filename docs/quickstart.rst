@@ -36,10 +36,6 @@ Alternative installation procedures are also
 :doc: `described elsewhere <installation>`_.
 However, we'll be using test files kept in this git repository.
 
-..
-    What's the difference between this :doc: directive and :ref:?
-
-
 .. _example_data:
 
 Example Data
@@ -220,7 +216,7 @@ Users may be most interested in the contents of the file
     TODO: Quickly show the contents of this most-important output file.
 
 Other output files and the full output directory structure can be found at
-:ref: `MIDAS 2.0 Target Layout<target_layout>`.
+:ref:`MIDAS 2.0 Target Layout<target_layout>`.
 
 Copy-number Variant Analysis
 **********************************
@@ -273,4 +269,4 @@ Users may be most interested in the contents of the file
     TODO: Quickly show the contents of this most-important output file.
 
 Other output files and the full output directory structure can be found on
-the :ref: `Target Layout<target_layout>` documentation.
+the :ref:`Target Layout<target_layout>` documentation.
