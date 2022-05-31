@@ -49,7 +49,7 @@ We presuppose users also completed the :ref:`Species for Genotype<species_for_ge
   The first time ``run_genes`` is used, MIDAS will automatically download
   gene collections for the selected species.
 
-.. note::
+.. tip::
 
    This step can be parallelized over samples (e.g. using shell background
    processes).

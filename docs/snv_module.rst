@@ -97,7 +97,7 @@ A typical call to ``run_snps`` for one sample is:
   The first time ``run_snps`` is used, MIDAS will automatically download
   the reference genomes for the selected species.
 
-.. note::
+.. tip::
 
    This step can be parallelized over samples (e.g. using shell background
    processes).

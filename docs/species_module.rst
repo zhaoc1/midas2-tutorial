@@ -47,7 +47,7 @@ In this document, we will keep using the :ref:`example data<example_data>` from 
   The first time ``run_species`` is used, MIDAS will automatically download
   the marker gene database.
 
-.. note::
+.. tip::
 
    This step can be parallelized over samples (e.g. using shell background
    processes)
