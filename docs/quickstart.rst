@@ -59,6 +59,13 @@ Navigate to the ``tests`` directory ::
 Pre-download SCG Genes
 **********************
 
+..
+    I think you should delete this pre-loading step, since
+    MIDAS is designed to do it automatically.
+    If you intend to remove this functionality soon, but
+    otherwise I think it fits the quickstart mentality to use
+    as much of the automated stuff as possible.
+
 Download the universal single copy genes for MIDAS reference database (MIDAS DB) of ``uhgg``
 to a new folder called ``my_midasdb_uhgg`` ::
 
