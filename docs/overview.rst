@@ -13,11 +13,7 @@ SNV Calling
 *************
 
 
-:ref: `<_module_snv_calling>`_.
-
-..
-    Which references have '_' prefixes
-    and which don't?
+:ref: `<module_snv_calling>`_.
 
 
 CNV Calling
