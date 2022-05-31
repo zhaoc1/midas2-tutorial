@@ -14,10 +14,6 @@ We presuppose users have already completed the :ref:`Species Selection<module_si
 and have ``midas2_output/sample1/species/species_profile.tsv`` ready for each sample.
 Alternatively, advanced users can pass a *prebuilt rep-genome index* (:ref:) ready for single-sample SNV analysis.
 
-.. contents::
-   :depth: 3
-
-
 Population CNV Calling
 **********************
 

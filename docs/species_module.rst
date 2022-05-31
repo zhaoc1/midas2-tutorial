@@ -12,10 +12,6 @@ which filters the MIDASDB to sufficiently abundant species in each particular
 sample.
 
 
-.. contents::
-   :depth: 3
-
-
 .. _module_single_species_selection:
 
 Single-Sample Species Profiling

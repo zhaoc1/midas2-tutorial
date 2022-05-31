@@ -1,11 +1,6 @@
 Installation
 ============
 
-
-.. contents::
-   :depth: 2
-
-
 MIDAS 2.0 and all its dependencies can be installed in a few ways.
 
 Conda

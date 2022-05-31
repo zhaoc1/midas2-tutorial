@@ -1,10 +1,6 @@
 Quickstart
 ============
 
-.. contents::
-   :depth: 3
-
-
 Setup
 *****
 
