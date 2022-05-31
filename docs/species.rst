@@ -46,6 +46,24 @@ In this document, we will keep using the :ref:`example data<example_data>` from 
       --num_cores 4 \
       midas2_output
 
+.. note::
+
+  The first time ``run_species`` is used, MIDAS will automatically download
+  the marker gene database.
+
+.. note::
+
+   This step can be parallelized over samples (e.g. using shell background
+   processes)
+
+.. warning::
+
+   (Race condition) If starting multiple calls to ``run_species``
+   simultaneously, be sure that the marker gene database has already been
+   downloaded.
+   Otherwise multiple redundant downloads may be started.
+   TODO: Link to the preload instructions here.
+
 
 Expected Output
 ---------------

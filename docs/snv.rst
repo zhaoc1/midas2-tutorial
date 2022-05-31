@@ -96,8 +96,26 @@ A typical call to ``run_snps`` for one sample is:
     --num_cores 8 \
     midas2_output
 
+.. note::
 
-Having run all samples in this way, users next can perform the population SNV analysis using the ``merge_snps`` command with the default filters:
+  The first time ``run_snps`` is used, MIDAS will automatically download
+  the reference genomes for the selected species.
+
+.. note::
+
+   This step can be parallelized over samples (e.g. using shell background
+   processes).
+
+.. warning::
+
+   (Race condition) If starting multiple calls to ``run_snps``
+   simultaneously, be sure that reference genomes have already been
+   downloaded.
+   Otherwise multiple redundant downloads may be started.
+   TODO: Link to the preload instructions here.
+
+Having run all samples in this way, users next can perform the population SNV
+analysis using the ``merge_snps`` command with the default filters:
 
 .. code-block:: shell
 

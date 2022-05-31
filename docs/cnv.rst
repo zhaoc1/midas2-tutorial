@@ -48,8 +48,27 @@ We presuppose users also completed the :ref:`Species for Genotype<species_for_ge
     --num_cores 8 \
     midas2_output
 
-Having run the single-sample CNV analysis for all the samples listed in the ``list_of_samples.tsv``,
-users next can merge the results and product a summary with `merge_genes` command with default parameters.
+.. note::
+
+  The first time ``run_genes`` is used, MIDAS will automatically download
+  gene collections for the selected species.
+
+.. note::
+
+   This step can be parallelized over samples (e.g. using shell background
+   processes).
+
+.. warning::
+
+   (Race condition) If starting multiple calls to ``run_genes``
+   simultaneously, be sure that the gene collections have already been
+   downloaded.
+   Otherwise multiple redundant downloads may be started.
+   TODO: Link to the preload instructions here.
+
+Having run the single-sample CNV analysis for all the samples listed in the
+``list_of_samples.tsv``, users next can merge the results and product a summary
+with `merge_genes` command with default parameters.
 
 .. code-block:: shell
 
