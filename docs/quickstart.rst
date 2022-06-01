@@ -19,10 +19,11 @@ install the dependencies. We do not currently support non-Linux environments.
 
 .. code-block:: shell
 
-  $ git clone https://github.com/czbiohub/MIDAS2.0.git
+  $ git clone https://github.com/czbiohub/
+  .git
   $ cd MIDAS2.0
 
-  $ conda env create -n MIDAS 2.0 -f MIDAS 2.0.yml
+  $ conda env create -n midas2.0 -f midas2.yml
   $ cpanm Bio::SearchIO::hmmer --force # Temporary fix for Prokka
 
   $ conda activate midas2.0
@@ -68,7 +69,7 @@ Identify Abundant Species
 
   for sample_name in sample1 sample2
   do
-    midas2.0 run_species \
+    midas2 run_species \
         --sample_name ${sample_name} \
         -1 reads/${sample_name}_R1.fastq.gz \
         --midasdb_name uhgg \
@@ -94,7 +95,7 @@ and pileup results of the species in the restricted species profile
 
   for sample_name in sample1 sample2
   do
-    midas2.0 run_snps \
+    midas2 run_snps \
       --sample_name ${sample_name} \
       -1 reads/${sample_name}_R1.fastq.gz \
       --midasdb_name uhgg \
@@ -118,7 +119,7 @@ across-samples analysis.
 .. code-block:: shell
 
   echo -e "sample_name\tmidas_outdir" > list_of_samples.tsv
-  ls reads | awk -F '_' '{print $1}' | awk -v OFS='\t' '{print $1, midas2_output}' >> list_of_samples.tsv
+  ls reads | awk -F '_' '{print $1}' | awk -v OFS='\t' '{print $1, "midas2_output"}' >> list_of_samples.tsv
 
 
 We can take a look at the ``list_of_samples.tsv``:
@@ -162,7 +163,7 @@ The pileup summary for ``sample1`` will be generated under the directory
 
   for sample_name in sample1 sample2
   do
-    midas2.0 run_genes \
+    midas2 run_genes \
       --sample_name ${sample_name} \
       -1 reads/${sample_name}_R1.fastq.gz \
       --midasdb_name uhgg \
@@ -179,7 +180,7 @@ We can merge the per-sample CNV results:
 
 .. code-block:: shell
 
-  midas2.0 run_genes \
+  midas2 run_genes \
     --samples_list list_of_samples.tsv \
     --midasdb_name uhgg \
     --midasdb_dir my_midasdb_uhgg \
