@@ -1,36 +1,49 @@
 
-.. _module_cnv_calling:
+.. _cnv_module:
 
+####################################
 Module: Copy Number Variant Analysis
-=============================================
+####################################
 
-Similar to the SNV module, the Copy Number Variant (CNV) module also proceeds in two steps:
+Similar to the SNV module, the Copy Number Variant (CNV) module has two commands:
 
-#. Single-sample pan-genome copy number variants calling, with ``run_genes`` command;
-#. Merge these results into a summary across all samples, with ``merge_genes`` command.
+#. Single-sample, pan-genome copy number quantification with the ``run_genes`` command;
+#. Merging these results across all samples with the ``merge_genes`` command.
 
 The first step can be run in parallel.
-We presuppose users have already completed the :ref:`Species Selection<module_single_species_selection>`
-and have ``midas2_output/sample1/species/species_profile.tsv`` ready for each sample.
-Alternatively, advanced users can pass a *prebuilt rep-genome index* (:ref:) ready for single-sample SNV analysis.
+We assume users have already completed the :ref:`species module<species_module>`
+and have a species profile (e.g. ``midas2_output/sample1/species/species_profile.tsv``)
+ready for each sample.
+Alternatively, advanced users can pass a pre-built pangenome bowtie2 index.
 
-Population CNV Calling
-**********************
+Per-Sample Analysis
+======================
 
-Typically, the ``run_genes`` command proceeds by
+Conceptually, a typical invocation of the ``run_genes`` command proceeds by
 
-#.  selecting species based on taxonomic marker gene profiles;
-#.  building a sample-specific pan-genome index;
-#.  mapping reads with bowtie2 to this index;
-#.  outputting read mapping summary and copy number profiling result on a per-species basis.
+#.  selecting sample-specific abundant species based on statistics calculated
+    in the :ref:`species module <species_module>`;
+#.  compiling species pan-genomes and building a sample-specific
+    bowtie2 index;
+#.  mapping reads to this index with bowtie2;
+#.  outputting a read mapping summary and copy number profile for each
+    pan-genome (i.e. each species).
 
+For each species, copy numbers for each gene are estimated as follows:
 
-Example Command
----------------
+#.  For each gene in the species pangenome, read alignment metrics,
+    e.g ``mapped_reads`` and ``mean_coverage``, are computed from the bowtie2
+    results;
+#.  species-level coverage is calculated as the median read coverage of the 15
+    universal single-copy taxonomic marker genes.
+#.  gene copy number (and presence/absence) is estimated by normalizing the
+    gene coverage by the species coverage.
 
-In this document, we will keep using the :ref:`example data<example_data>` from Quickstart.
+..
+    Why "**e.g.** mapped_reads`` ...". Are there others? What are they? How are they used?
 
-We presuppose users also completed the :ref:`Species for Genotype<species_for_genotype>`. A typical call to ``run_genes`` for one sample is:
+(In this document, we continue to use the :ref:`data<example_data>` from the
+Quickstart as an example.)
 
 .. code-block:: shell
 
@@ -44,15 +57,18 @@ We presuppose users also completed the :ref:`Species for Genotype<species_for_ge
     --num_cores 8 \
     midas2_output
 
-.. note::
-
-  The first time ``run_genes`` is used, MIDAS will automatically download
-  gene collections for the selected species.
+See the documentation on `selecting abundant species <abundant_species_selection>`_
+for more information about the ``--select_by`` and ``--select_threshold`` flags.
 
 .. tip::
 
    This step can be parallelized over samples (e.g. using shell background
    processes).
+
+.. note::
+
+  The first time ``run_genes`` is used, MIDAS will automatically download
+  gene collections for the selected species.
 
 .. warning::
 
@@ -62,9 +78,12 @@ We presuppose users also completed the :ref:`Species for Genotype<species_for_ge
    Otherwise multiple redundant downloads may be started.
    TODO: Link to the preload instructions here.
 
+Cross-Sample Merging
+=====================
+
 Having run the single-sample CNV analysis for all the samples listed in the
 ``list_of_samples.tsv``, users next can merge the results and product a summary
-with `merge_genes` command with default parameters.
+using the `merge_genes` command.
 
 .. code-block:: shell
 
@@ -75,17 +94,12 @@ with `merge_genes` command with default parameters.
       --num_cores 8 \
       midas2_output/merge
 
-Expected Output
----------------
+Key Outputs
+===========
 
-.. _single_sample_gene_summary:
-
-Single-Sample
-+++++++++++++
-
-**genes_summary.tsv**
-
-This file ``midas2_output/samples1/genes/genes_summary.tsv`` reports read alignment and CNV calling summary for all the species in the pan-genome index.
+For each sample (e.g. here sample1)
+a summary of read alignment and CNV calling across all analyzed species
+is written to ``midas2_output/samples1/genes/genes_summary.tsv``.
 
 .. csv-table::
   :align: left
@@ -94,26 +108,27 @@ This file ``midas2_output/samples1/genes/genes_summary.tsv`` reports read alignm
    102337,15578,4468,0.287,16.213,1650361,450353,20.213
    102506,731186,4733, 0.006,3.803,681335,37272,2.140
 
-- ``species_id``: six-digit species id
-- ``pangenome_size``: number of centroids (non-redundant genes) in the species pangenome
-- ``covered_genes``: number of centroids covered with at least one post-filtered read
-- ``fraction_covered``: fraction of ``covered_genes`` over ``pangenome_size``
-- ``mean_coverage``: average read depth across ``covered_genes``
-- ``aligned_reads``: total number of aligned reads before post-alignment filter
-- ``mapped_reads``: total number of aligned reads after post-alignment filter
-- ``marker_coverage``: average read depth across 15 universal SCGs in the species pangenome
+
+Where each columns has the following meaning:
+
+.. code-block:: text
+
+    species_id:       six-digit species id
+    pangenome_size:   number of centroids (non-redundant genes) in the species pangenome
+    covered_genes:    number of centroids covered with at least one post-filtered read
+    fraction_covered: fraction of covered_genes over pangenome_size
+    mean_coverage:    average read depth across covered_genes
+    aligned_reads:    total number of aligned reads before post-alignment filter
+    mapped_reads:     total number of aligned reads after post-alignment filter
+    marker_coverage:  average read depth across 15 universal SCGs in the species pangenome
 
 
-Per species per centroid copy numbers are computed in three steps:
+Copy-number estimates are written to
+``midas2_output/samples1/genes/102506.genes.tsv.lz4``
+and include all genes covered by at least two reads.
 
-#.  Per centroid, read alignment metrics, e.g ``mapped_reads`` and ``mean_coverage``, are computed;
-#.  Per species, median read coverage of all the mapped centroids corresponding to the 15 universal SCGs are identified;
-#.  Per centroid, ``copy numbers`` are computed and gene presence/absence are further inferred.
-
-
-**Per-species Pan-gene CNV Calling**
-
-This file ``midas2_output/samples1/genes/102506.genes.tsv.lz4`` reports the per-species CNV calling for all the pan-genes covered by at least two post-filered reads.
+.. note::
+    Large output files are compressed with `LZ4 <http://lz4.github.io/lz4/>`_ to minimize storage requirements.
 
 .. csv-table::
   :align: left
@@ -123,22 +138,22 @@ This file ``midas2_output/samples1/genes/102506.genes.tsv.lz4`` reports the per-
    UHGG143901_03589,384,103,57,32.840708,0.294271,15.347667
    UHGG143902_04031,207,9,2,1.737500,0.386473,0.811997
 
-- ``gene_id``: centroid id in the species pan-genome
-- ``gene_length``: gene length
-- ``aligned_reads``: number of aligned reads to ``gene_id`` before post-alignment filter
-- ``mapped_reads``: number of aligned reads to ``gene_id`` after post-alignment filter
-- ``mean_coverage``: average read depth of ``gene_id`` based on ``mapped_reads`` (``total_gene_depth / covered_bases``)
-- ``fraction_covered``: proportion of the ``gene_id`` covered by at least one read (``covered_bases / gene_length``)
-- ``copy_number``: estimated copy number of ``gene_id`` based on ``mapped_reads`` (``mean_coverage / median_marker_coverage``)
+Where columns have the following meaning:
 
+.. code-block:: text
 
-Across-Samples
-+++++++++++++++
+    gene_id:          centroid id in the species pan-genome
+    gene_length:      gene length
+    aligned_reads:    number of aligned reads to gene_id before post-alignment filter
+    mapped_reads:     number of aligned reads to gene_id after post-alignment filter
+    mean_coverage:    average read depth of gene_id based on mapped_reads (total_gene_depth / covered_bases)
+    fraction_covered: proportion of the gene_id covered by at least one read (covered_bases / gene_length)
+    copy_number:      estimated copy number of gene_id based on mapped_reads (mean_coverage / median_marker_coverage)
 
-**genes_summary.tsv**
+Merging across samples produces several outputs.
 
-This file ``midas2_output/merge/genes/genes_summary.tsv`` merge all single-sample CNV calling summary for all the species in the :ref:`single-sample results<single_sample_gene_summary>`.
-The reported columns ``covered_genes``:``marker_coverage`` are the same with single-sample CNV summary.
+CNV results merged across samples are written to
+``midas2_output/merge/genes/genes_summary.tsv`` 
 
 .. csv-table::
   :align: left
@@ -147,13 +162,13 @@ The reported columns ``covered_genes``:``marker_coverage`` are the same with sin
   sample1,100122,  29165,,   2535,,   0.087,,, 4.723,,  263395,, 53006,, 1.435
   sample2,100122,  29165,,   3212,,   0.110,,, 16.095,, 1447684,,263878,,10.713
 
-- ``sample_name``: unique sample name
-- ``species_id``: six-digit species id
+Besides ``sample_name``, which indexes the entries, the other
+columns (``pangenome_size`` through ``marker_coverage``) are the same as in the
+per-sample genes summary output.
 
-
-**Per-species Pan-gene CNV Matrix**
-
-This file ``midas2_output/merge/genes/102506.genes_copynum.tsv.lz4`` reports gene-by-sample copy number matrix.
+For each species, a matrix of gene-by-sample copy-number
+estimates---here species 102506 (*E. coli*)---are written to
+``midas2_output/merge/genes/102506.genes_copynum.tsv.lz4``.
 
 .. csv-table::
   :align: left
@@ -163,10 +178,8 @@ This file ``midas2_output/merge/genes/102506.genes_copynum.tsv.lz4`` reports gen
   UHGG000587_01162,5.703398,2.821237
   UHGG000587_00962,2.370930,0.289325
 
-
-**Per-species Pan-gene Presence Absence Matrix**
-
-This file ``midas2_output/merge/genes/102506.genes_preabs.tsv.lz4`` reports gene-by-sample presence absence matrix.
+Similarly, a presence absence matrix is written to
+``midas2_output/merge/genes/102506.genes_preabs.tsv.lz4``.
 
 .. csv-table::
   :align: left
@@ -177,9 +190,11 @@ This file ``midas2_output/merge/genes/102506.genes_preabs.tsv.lz4`` reports gene
    UHGG000587_00962,1,0
 
 
-****Per-species Pan-gene Mean Coverage Matrix**
+Raw coverage data is reported in the same matrix form in
+``midas2_output/merge/genes/102506.genes_depth.tsv.lz4``.
 
-This file ``midas2_output/merge/genes/102506.genes_depth.tsv.lz4`` reports gene-by-sample mean coverage matrix.
+..
+    TODO: Does "coverage" == vertical coverage ("depth")?
 
 .. csv-table::
   :align: left
@@ -191,7 +206,7 @@ This file ``midas2_output/merge/genes/102506.genes_depth.tsv.lz4`` reports gene-
 
 
 Advanced CNV Calling
-********************
+====================
 
 Adjust Single-Sample Post-alignment Filter
 ------------------------------------------

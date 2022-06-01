@@ -1,42 +1,291 @@
-.. _module_snv_calling:
+.. _snv_module:
 
+##########################################
 Module: Single Nucleotide Variant Analysis
-==========================================
+##########################################
+
+The Single Nucleotide Variant (SNV) module has two commands:
+
+#. Single-sample allele tallying with the ``run_snps`` command;
+#. SNV calling across all the samples, with ``merge_snps`` command.
+
+The first step can be run in parallel. We assume users have already completed
+the :ref:`species module<species_module>` and have
+a species profile (e.g. ``midas2_output/sample1/species/species_profile.tsv``)
+ready for each sample.
+Alternatively, advanced users can pass a pre-built representative genome index
+ready for single-sample SNV analysis.
+
+..
+    TODO: Add :ref: to pre-built index docs
+
+Per-Sample Analysis
+===================
+
+Conceptually, a typical invocation of the ``run_snps`` command proceeds by
+
+#.  selecting sample-specific abundant species based on statistics calculated
+    in the :ref:`species module <species_module>`;
+#.  compiling these representative genomes and building a sample-specific
+    bowtie2 index;
+#.  mapping reads to this index with bowtie2;
+#.  outputting a read mapping summary and pileup result for each representative
+    genome (i.e. each species).
+
+MIDAS 2.0 purposely holds off any filtering or identification of variant
+positions until the subsequent cross-sample analysis.
+
+(In this document, we continue to use the :ref:`data<example_data>` from the
+Quickstart as an example.)
+
+.. code-block:: shell
+
+  midas2 run_snps \
+    --sample_name sample1 \
+    -1 reads/sample1_R1.fastq.gz \
+    --midasdb_name uhgg \
+    --midasdb_dir my_midasdb_uhgg \
+    --select_by median_marker_coverage,unique_fraction_covered \
+    --select_threshold=2,0.5 \
+    --num_cores 8 \
+    midas2_output
+
+See the documentation on `selecting abundant species <abundant_species_selection>`_
+for more information about the ``--select_by`` and ``--select_threshold`` flags.
+
+.. tip::
+
+   This step can be parallelized over samples (e.g. using shell background
+   processes).
+
+.. note::
+
+  The first time ``run_snps`` is used, MIDAS will automatically download
+  the reference genomes for the selected species.
+
+.. warning::
+
+   (Race condition) If starting multiple calls to ``run_snps``
+   simultaneously, be sure that reference genomes have already been
+   downloaded.
+   Otherwise multiple redundant downloads may be started.
+   TODO: Link to the preload instructions here.
+
+Cross-Sample Analysis
+=====================
+
+After running all samples individually in this way, users can then
+merge and analyze SNVs across samples using the ``merge_snps`` command.
+
+.. code-block:: shell
+
+    midas2 merge_snps \
+      --samples_list list_of_samples.tsv \
+      --midasdb_name uhgg \
+      --midasdb_dir my_midasdb_uhgg \
+      --num_cores 8 \
+      midas2_output/merge
 
 
-The Single Nucleotide Variant (SNV) module proceeds in two steps:
+Key Outputs
+===========
 
-#. Single-sample variant calling, with ``run_snps`` command;
-#. Population SNV calling across all the samples, with ``merge_snps`` command.
+Unlike the :ref:`species <species_module>` and :ref:`CNV <cnv_module>` modules,
+the single-sample outputs from the SNV module are less interesting than the
+merged results.
 
-The first step can be run in parallel.
-We presuppose users have already completed the :ref:`species selection<module_single_species_selection>`
-and have ``midas2_output/sample1/species/species_profile.tsv`` ready for each sample.
-Alternatively, advanced users can pass a *prebuilt rep-genome index* (:ref:) ready for single-sample SNV analysis.
+..
+    TODO: Link the merged section
 
+Users may, however, find several files useful.
+
+A summary of read alignment and pileups for each of the genomes included in the
+(usually sample-specific) bowtie2 index is reported in
+``midas2_output/samples1/snps/snps_summary.tsv``.
+
+.. csv-table::
+  :align: left
+
+  *species_id*,*genome_length*,*covered_bases*,*total_depth*,*aligned_reads*,*mapped_reads*,*fraction_covered*,*mean_coverage*
+  102506,5339468,2373275,8045342,468667,224553,0.444,3.390
+  102337,2749621,2566404,47723458,1479479,1010530, 0.933,18.595
+
+Where each columns has the following meaning:
+
+.. code-block:: text
+
+    species_id:       six-digit species id
+    genome_length:    genome length
+    covered_bases:    number of bases covered by at least one post-filtered reads
+    total_depth:      total read depth across all covered_bases
+    aligned_reads:    total read counts across covered_bases before post-alignment filter
+    mapped_reads:     total read counts across covered_bases after post-alignment filter
+    fraction_covered: fraction of covered_bases (aka horizontal genome coverage)
+    mean_coverage:    mean read depth across all covered_bases (aka vertical genome coverage)
+
+
+For each sample and species---e.g. here sample1 and species 102506
+(*E. coli*)---the per-species read pileup is found in
+``midas2_output/samples1/snps/102506.snps.tsv.lz4``.
+Positions are filtered to only sites in the reference genome covered by at
+least two reads.
+
+.. note::
+    Large output files are compressed with `LZ4 <http://lz4.github.io/lz4/>`_ to minimize storage requirements.
+
+..
+    TODO: Link to some LZ4 docs.
+
+When uncompressed, the contents of this file should look like the following CSV:
+
+.. csv-table::
+  :align: left
+
+  *ref_id*,*ref_pos*,*ref_allele*,*depth*,*count_a*,*count_c*,*count_g*,*count_t*
+  gnl|Prokka|UHGG144544_1,881435,T,11,0,0,0,11
+  gnl|Prokka|UHGG144544_1,881436,T,13,0,5,0,8
+  gnl|Prokka|UHGG144544_1,881437,T,12,0,6,0,6
+
+Where the columns have the following meaning:
+
+.. code-block:: text
+
+    ref_id:     scaffold/contig id
+    ref_pos:    reference position
+    ref_allele: reference nucleotide
+    depth:      number of post-filtered reads
+    count_a:    post-filtered read counts of A allele
+    count_c:    post-filtered read counts of C allele
+    count_g:    post-filtered read counts of G allele
+    count_t:    post-filtered read counts of T allele
+
+..
+    TODO: Explain what the filtering is? What does post-filtered mean?
+
+A number of outputs result from the cross-sample analysis.
+
+A merged pileup summary is found in ``midas2_output/merge/snps/snps_summary.tsv``.
+
+.. csv-table::
+    :align: left
+
+    *sample_name*,*species_id*,*genome_length*,*covered_bases*,*total_depth*,*aligned_reads*,*mapped_reads*,*fraction_covered*,*mean_coverage*
+    sample1,100122,2560878,2108551,10782066,248700,207047,0.823,5.113
+    sample2,100122,2560878,2300193,39263110,1180505,820736,0.898,17.069
+
+The reported columns ``genome_length``:``mean_coverage`` are the same as from
+the single-sample SNV summary.
+
+..
+    TODO: Add descriptions for the other columns?
+
+For each species, information about SNVs identified across samples is written
+to ``midas2_output/merge/snps/102506.snps_info.tsv.lz4``.
+
+.. csv-table::
+  :align: left
+
+    *site_id*,*major_allele*,*minor_allele*,*sample_counts*,*snp_type*,*rc_A*,*rc_C*,*rc_G*,*rc_T*,*sc_A*,*sc_C*,*sc_G*,*sc_T*,*locus_type*,*gene_id*,*site_type*,*amino_acids*
+    gnl|Prokka|UHGG000587_14|34360|A,A,C,2,bi,26,10,0,0,2,2,0,0,CDS,UHGG000587_02083,4D,"T\,T\,T\,T"
+    gnl|Prokka|UHGG000587_11|83994|T,G,T,2,bi,0,0,11,45,0,0,2,2,IGR,None,None,None
+
+..
+    (Software) Using CSV for this output that we KNOW includes ',' characters
+    in the last field seems like a mistake. Wouldn't TSV be better?
+
+Where columns have the following meaning:
+
+.. code-block:: text
+
+    site_id:       unique site id, composed of ref_id|ref_pos|ref_allele
+    major_allele:  most common/prevalent allele in metagenomes
+    minor_allele:  second most common/prevalent allele in metagenomes
+    sample_counts: number of relevant samples where metagenomes is found
+    snp_type:      the number of alleles observed at site (mono,bi,tri,quad)
+    rc_A:          accumulated read counts of A allele in metagenomes
+    rc_C:          accumulated read counts of C allele in metagenomes
+    rc_G:          accumulated read counts of G allele in metagenomes
+    rc_T:          accumulated read counts of T allele in metagenomes
+    sc_A:          accumulated sample counts of A allele in metagenomes
+    sc_C:          accumulated sample counts of C allele in metagenomes
+    sc_G:          accumulated sample counts of G allele in metagenomes
+    sc_T:          accumulated sample counts of T allele in metagenomes
+    locus_type:    CDS (site in coding gene), RNA (site in non-coding gene), IGR (site in intergenic region)
+    gene_id:       gene identified if locus type is CDS, or RNA
+    site_type:     indicates degeneracy: 1D, 2D, 3D, 4D
+    amino_acids:   amino acids encoded by 4 possible alleles
+
+
+A site-by-sample minor allele frequency matrix is written to
+``midas2_output/merge/snps/102506.snps_freq.tsv.lz4``.
+
+.. csv-table::
+  :align: left
+
+  *site_id*,*sample1*,*sample2*
+  gnl|Prokka|UHGG000587_11|83994|T,0.692,0.837
+  gnl|Prokka|UHGG000587_14|34360|A,0.300,0.269
+
+..
+    Is this statistic minor / (major + minor) or minor / total?
+    Is the base in the *site_id* label the major or minor allele?
+    ...Or maybe the reference genome allele?
+
+A site-by-sample read depth matrix is written to
+``midas2_output/merge/snps/102506.snps_freq.tsv.lz4``.
+
+.. note::
+    This table only accounts for the alleles matching the population major
+    and/or minor allele. Other bases are dropped.
+
+.. csv-table::
+  :align: left
+
+  *site_id*,*sample1*,*sample2*
+  gnl|Prokka|UHGG000587_11|83994|T,13,43
+  gnl|Prokka|UHGG000587_14|34360|A,10,26
+
+..
+    TODO: The below still needs to be reorganized.
+
+Advanced SNV Calling
+====================
+
+..
+    Most of this content should go into the "Advanced Usage" page/section.
+    Keep the main SNV Modules page just to standard usage and key outputs.
 
 .. _species_for_genotype:
 
 Species for Genotype
-********************
+--------------------
 
-In a standard SNV/CNV workflow, only **sufficiently abundant species** in the restricted species profile
-will be included to build representative genome (rep-genome) or pan-genome index and further to be genotyped.
-In order to use the species marker genes profiles to select species for index building in the ``run_snps`` and ``run_genes`` commands, we need to pass
-flags specifying the following parameters:
+..
+    This content is shared by both SNV and CNV. We should give it its own page
+    and link to it from the two modules.
 
-- ``--select_by`` followed by a comma separated list of column names in ``midas2_output/species/species_profile.tsv``
-- ``--select_threshold`` followed by a comma-separated list of threshold values for selection.
+In a standard SNV/CNV workflow, only sufficiently abundant species in the
+restricted species profile will be included to build representative genome
+(rep-genome) or pan-genome index and further to be genotyped. In order to use
+the species marker genes profiles to select species for index building in the
+``run_snps`` and ``run_genes`` commands, we need to pass flags specifying the
+following parameters:
+
+- ``--select_by`` followed by a comma separated list of column names in
+  ``midas2_output/species/species_profile.tsv``
+- ``--select_threshold`` followed by a comma-separated list of threshold values
+  for selection.
 
 
-For most analyses we recommend using the combination of ``median_marker_coverage > 2X`` and ``unique_fraction_covered > 0.5``:
+For most analyses we recommend using the combination of
+``median_marker_coverage > 2X`` and ``unique_fraction_covered > 0.5``:
 
 .. code-block:: shell
 
   --select_by median_marker_coverage,unique_fraction_covered --select_threshold=2,0.5
 
 
-Some users may wish to genotype low abundant species and should adjust the parameters accordingly:
+Some users may wish to genotype low abundance species and should adjust the parameters accordingly:
 
 .. code-block:: shell
 
@@ -56,199 +305,6 @@ escape species selection filters based on the species profiling:
 **All** the species passing the above mentioned filters will be genotyped in either single-sample SNV or single-sample CNV module.
 
 
-Population SNV Calling
-*************************
-
-Typically, the ``run_snps`` command proceeds by
-
-#.  selecting species based on taxonomic marker gene profiles;
-#.  building a sample-specific representative genome (rep-genome) index;
-#.  mapping reads with bowtie2 to this index;
-#.  outputting read mapping summary and pileup result on a per-species basis.
-
-
-MIDAS 2.0 purposely holds any filter or species selection upon the single-sample pileup results until across-samples SNV analysis.
-
-
-Example Command
----------------
-
-In this document, we will keep using the :ref:`example data<example_data>` from Quickstart.
-
-
-A typical call to ``run_snps`` for one sample is:
-
-.. code-block:: shell
-
-  midas2 run_snps \
-    --sample_name sample1 \
-    -1 reads/sample1_R1.fastq.gz \
-    --midasdb_name uhgg \
-    --midasdb_dir my_midasdb_uhgg \
-    --select_by median_marker_coverage,unique_fraction_covered \
-    --select_threshold=2,0.5 \
-    --num_cores 8 \
-    midas2_output
-
-.. note::
-
-  The first time ``run_snps`` is used, MIDAS will automatically download
-  the reference genomes for the selected species.
-
-.. tip::
-
-   This step can be parallelized over samples (e.g. using shell background
-   processes).
-
-.. warning::
-
-   (Race condition) If starting multiple calls to ``run_snps``
-   simultaneously, be sure that reference genomes have already been
-   downloaded.
-   Otherwise multiple redundant downloads may be started.
-   TODO: Link to the preload instructions here.
-
-Having run all samples in this way, users next can perform the population SNV
-analysis using the ``merge_snps`` command with the default filters:
-
-.. code-block:: shell
-
-    midas2 merge_snps \
-      --samples_list list_of_samples.tsv \
-      --midasdb_name uhgg \
-      --midasdb_dir my_midasdb_uhgg \
-      --num_cores 8 \
-      midas2_output/merge
-
-
-Expected Output
----------------
-
-.. _single_sample_snv_summary:
-
-Single-Sample
-+++++++++++++
-
-**snps_summary.tsv**
-
-This file ``midas2_output/samples1/snps/snps_summary.tsv`` reports read alignment and pileup summary for all the species in the rep-genome index.
-
-.. csv-table::
-  :align: left
-
-  *species_id*,*genome_length*,*covered_bases*,*total_depth*,*aligned_reads*,*mapped_reads*,*fraction_covered*,*mean_coverage*
-  102506,5339468,2373275,8045342,468667,224553,0.444,3.390
-  102337,2749621,2566404,47723458,1479479,1010530, 0.933,18.595
-
--   ``species_id``: six-digit species id
--   ``genome_length``: genome length
--   ``covered_bases``: number of bases covered by at least one post-filtered reads
--   ``total_depth``: total read depth across all ``covered_bases``
--   ``aligned_reads``: total read counts across ``covered_bases`` before post-alignment filter
--   ``mapped_reads``: total read counts across ``covered_bases`` after post-alignment filter
--   ``fraction_covered``: fraction of ``covered_bases`` (aka horizontal genome coverage)
--   ``mean_coverage``: mean read depth across all ``covered_bases`` (aka vertical genome coverage)
-
-
-**Per-species Read Pileup**
-
-This file ``midas2_output/samples1/snps/102506.snps.tsv.lz4`` reports the per-species read pileup for all the genomic sites covered by at least two post-filered reads.
-
-.. csv-table::
-  :align: left
-
-  *ref_id*,*ref_pos*,*ref_allele*,*depth*,*count_a*,*count_c*,*count_g*,*count_t*
-  gnl|Prokka|UHGG144544_1,881435,T,11,0,0,0,11
-  gnl|Prokka|UHGG144544_1,881436,T,13,0,5,0,8
-  gnl|Prokka|UHGG144544_1,881437,T,12,0,6,0,6
-
--   ``ref_id``: scaffold/contig id
--   ``ref_pos``: reference position
--   ``ref_allele``: reference nucleotide
--   ``depth``: number of post-filtered reads
--   ``count_a``: post-filtered read counts of A allele
--   ``count_c``: post-filtered read counts of C allele
--   ``count_g``: post-filtered read counts of G allele
--   ``count_t``: post-filtered read counts of T allele
-
-
-Across-Samples
-+++++++++++++++
-
-**snps_summary.tsv**
-
-This file ``midas2_output/merge/snps/snps_summary.tsv`` merge all single-sample pileup summary for all the species in the :ref:`single-sample pileup summary<single_sample_snv_summary>`.
-The reported columns ``genome_length``:``mean_coverage`` are the same with single-sample SNV summary.
-
-
-.. csv-table::
-  :align: left
-
-  *sample_name*,*species_id*,*genome_length*,*covered_bases*,*total_depth*,*aligned_reads*,*mapped_reads*,*fraction_covered*,*mean_coverage*
-  sample1,100122,2560878,2108551,10782066,248700,207047,0.823,5.113
-  sample2,100122,2560878,2300193,39263110,1180505,820736,0.898,17.069
-
--  ``sample_name``: unique sample name
--  ``species_id``: six-digit species id
-
-
-**Per-species SNPs Info File**
-
-This file ``midas2_output/merge/snps/102506.snps_info.tsv.lz4`` reports the population SNV's metadata.
-
-.. csv-table::
-  :align: left
-
-    *site_id*,*major_allele*,*minor_allele*,*sample_counts*,*snp_type*,*rc_A*,*rc_C*,*rc_G*,*rc_T*,*sc_A*,*sc_C*,*sc_G*,*sc_T*,*locus_type*,*gene_id*,*site_type*,*amino_acids*
-    gnl|Prokka|UHGG000587_14|34360|A,A,C,2,bi,26,10,0,0,2,2,0,0,CDS,UHGG000587_02083,4D,T\\,T\\,T\\,T
-    gnl|Prokka|UHGG000587_11|83994|T,G,T,2,bi,0,0,11,45,0,0,2,2,IGR,None,None,None
-
--  ``site_id``: unique site id, composed of ``ref_id|ref_pos|ref_allele``
--  ``major_allele``: most common/prevalent allele in metagenomes
--  ``minor_allele``: second most common/prevalent allele in metagenomes
--  ``sample_counts``: number of relevant samples where metagenomes is found
--  ``snp_type``: the number of alleles observed at site (mono,bi,tri,quad)
--  ``rc_A``: accumulated read counts of A allele in metagenomes
--  ``rc_C``: accumulated read counts of C allele in metagenomes
--  ``rc_G``: accumulated read counts of G allele in metagenomes
--  ``rc_T``: accumulated read counts of T allele in metagenomes
--  ``sc_A``: accumulated sample counts of A allele in metagenomes
--  ``sc_C``: accumulated sample counts of C allele in metagenomes
--  ``sc_G``: accumulated sample counts of G allele in metagenomes
--  ``sc_T``: accumulated sample counts of T allele in metagenomes
--  ``locus_type``: CDS (site in coding gene), RNA (site in non-coding gene), IGR (site in intergenic region)
--   ``gene_id``: gene identified if locus type is CDS, or RNA
--   ``site_type``: indicates degeneracy: 1D, 2D, 3D, 4D
--   ``amino_acids``: amino acids encoded by 4 possible alleles
-
-
-**Per-species SNPs Freq Matrix**
-
-This file ``midas2_output/merge/snps/102506.snps_freq.tsv.lz4`` reports site-by-sample allele frequency matrix of population minor allele.
-
-.. csv-table::
-  :align: left
-
-  *site_id*,*sample1*,*sample2*
-  gnl|Prokka|UHGG000587_11|83994|T,0.692,0.837
-  gnl|Prokka|UHGG000587_14|34360|A,0.300,0.269
-
-
-**Per-species SNPs Depth Matrix**
-
-This file ``midas2_output/merge/snps/102506.snps_freq.tsv.lz4`` reports site-by-sample site depth matrix.
-Only accounts for the alleles matching the population major and/or minor allele.
-
-.. csv-table::
-  :align: left
-
-  *site_id*,*sample1*,*sample2*
-  gnl|Prokka|UHGG000587_11|83994|T,13,43
-  gnl|Prokka|UHGG000587_14|34360|A,10,26
-
-
-Advanced SNV Calling
-********************
 
 Adjust Single-Sample Post-alignment Filter
 ------------------------------------------
@@ -304,7 +360,7 @@ Users are advised to use the setting ``--ignore_ambiguous`` to avoid falsely cal
 
 
 Expected Output
-+++++++++++++++
+^^^^^^^^^^^^^^^
 
 In the ``--advanced`` mode, per-species pileup results will include five additional columns of the major/minor allele for all the covered genomic sites.
 

@@ -21,6 +21,9 @@ Chan Zuckerberg Biohub.
 
 ..
     TODO: Link CZB?
+    TODO: Replace use of "MIDAS 2.0" where it's obvious you're talking
+    about the current software with only "MIDAS". The "2.0" is self-evident
+    in most cases (the above paragraphs being one of the few exceptions).
 
 Source code is `available on GitHub
 <https://github.com/czbiohub/MIDAS2.0.git>`_.

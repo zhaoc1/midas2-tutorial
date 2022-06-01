@@ -48,6 +48,10 @@ command:
 This requires a large amount of data transfer and storage: 93 GB for ``MIDASDB-uhgg``
 and 539 GB for ``MIDASDB-gtdb``.
 
+.. note::
+    The database would be much larger except that files are compressed with
+    `LZ4 <http://lz4.github.io/lz4/>`_ to minimize storage requirements.
+
 We therefore recommend that users take a more customized approach to database
 loading, taking advantage of species-level database
 sharding to download and decompress only the necessary portions of a
