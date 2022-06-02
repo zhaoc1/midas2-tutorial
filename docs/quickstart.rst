@@ -222,7 +222,7 @@ Users may be most interested in the contents of the file
     TODO: Quickly show the contents of this most-important output file.
 
 Other output files and the full output directory structure can be found at
-:ref:`MIDAS 2.0 Target Layout<target_layout>`.
+:doc:`output`.
 
 Copy-number Variant Analysis
 **********************************
@@ -277,5 +277,5 @@ Users may be most interested in the contents of the file
 ..
     TODO: Quickly show the contents of this most-important output file.
 
-Other output files and the full output directory structure can be found on
-the :ref:`Target Layout<target_layout>` documentation.
+Other output files and the full output directory structure can be found at
+:doc:`output`.

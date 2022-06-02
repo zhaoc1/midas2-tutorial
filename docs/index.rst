@@ -47,8 +47,8 @@ Contents
     snv_module
     cnv_module
     download_midasdb
+    output
     advanced_topics
-    wiki
     glossary
     acknowledgements
     template
