@@ -65,7 +65,7 @@ Users should start by downloading the taxonomic marker genes.
         --midasdb_name uhgg \
         --midasdb_dir my_midasdb_uhgg
 
-This is everything needed to run :ref:`abundant species detection <species_detection>`.
+This is everything needed to run :ref:`abundant species detection <species_module>`.
 
 Afterwards, we can collect a list of species present in a list of samples.
 
