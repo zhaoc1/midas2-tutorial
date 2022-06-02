@@ -13,13 +13,8 @@ MIDAS 2.0 Wiki
 MIDAS 2.0 Results Layout
 ************************
 
-MIDAS 2.0 writes its outputs to a user-specified root directory, which is always passed as a mandatory argument to each of the MIDAS 2.0 command.
-In this documentation we refer to this directory as: ``midas_outdir=/path/to/results/root/directory``.
-Together with the unique sample name: ``sample_name=/unique/sample/id``,
-``midas_outdir/sample_name`` constitute the unique output directory for single-sample analysis, within which all analyses steps will be operated.
-
-As for the across-samples SNV or CNV analysis, all analyses steps operate within the directory ``midas_outdir``.
-
+In this section we refer to the output directory for single-sample as ``midas_output/sample_name``, and across-samples as ``midas_output``.
+More details can be found at :ref:`this page<common_cli_options>`.
 
 Single-Sample Results Layout
 ----------------------------
@@ -27,6 +22,7 @@ Single-Sample Results Layout
 MIDAS 2.0 analysis usually starts with species selection which selects sufficiently abundant species in each sample (command ``run_species``).
 After completing this step, users can run either of two strain-level analysis: ``run_snps`` for single-sample read pileup (SNV module) or
 ``run_genes`` for pan-gene profiling (CNV module).
+
 Here is an example of the results layout of all single-sample analysis in the local filesystem.
 
 .. code-block:: shell

@@ -22,10 +22,10 @@ install the dependencies. We do not currently support non-Linux environments.
 
 .. code-block:: shell
 
-  $ git clone https://github.com/czbiohub/MIDAS2.0.git
+  $ git clone https://github.com/czbiohub/midas2.0.git
   $ cd MIDAS2.0
 
-  $ conda env create -n MIDAS 2.0 -f MIDAS 2.0.yml
+  $ conda env create -n midas2.0 -f midas2.yml
   $ cpanm Bio::SearchIO::hmmer --force # Temporary fix for Prokka
 
   $ conda activate midas2.0
@@ -48,6 +48,8 @@ Navigate to the ``tests`` directory ::
   $ cd tests
 
 
+.. _init_db:
+
 Pre-download SCG Genes
 **********************
 
@@ -61,7 +63,7 @@ Pre-download SCG Genes
 Download the universal single copy genes for MIDAS reference database (MIDAS DB) of ``uhgg``
 to a new folder called ``my_midasdb_uhgg`` ::
 
-  $ midas2 database --download --midasdb_name uhgg --midasdb_dir my_midasdb_uhgg
+  $ midas2 database --init --midasdb_name uhgg --midasdb_dir my_midasdb_uhgg
 
 ..
     TODO: If I'm not mistaken, this will install the MIDASDB to MIDAS2.0/tests/my_midasdb_uhgg
@@ -73,6 +75,8 @@ to a new folder called ``my_midasdb_uhgg`` ::
     elsewhere in the wiki.
 
 
+.. _demo_midas_ourdir:
+
 Identify Abundant Species
 *************************
 
@@ -83,7 +87,7 @@ genes in order to identify abundant species in each sample.
 
   for sample_name in sample1 sample2
   do
-    midas2.0 run_species \
+    midas2 run_species \
         --sample_name ${sample_name} \
         -1 reads/${sample_name}_R1.fastq.gz \
         --midasdb_name uhgg \
@@ -118,7 +122,7 @@ We'll next run the single-sample SNV analysis for each sample.
 
   for sample_name in sample1 sample2
   do
-    midas2.0 run_snps \
+    midas2 run_snps \
       --sample_name ${sample_name} \
       -1 reads/${sample_name}_R1.fastq.gz \
       --midasdb_name uhgg \
@@ -159,17 +163,19 @@ This file has a column for the ``sample_name`` and another for
 .. code-block:: shell
 
   echo -e "sample_name\tmidas_outdir" > list_of_samples.tsv
-  ls reads | awk -F '_' '{print $1}' | awk -v OFS='\t' '{print $1, midas2_output}' >> list_of_samples.tsv
+  ls reads | awk -F '_' '{print $1}' | awk -v OFS='\t' '{print $1, "midas2_output"}' >> list_of_samples.tsv
+
 
 ..
     TODO: The shell command to build this file is a bit opaque, and users
     may have other ideas about how to build it. Maybe skip the shell
     script and just provide the manifest already in ``reads/``?
 
+We can take a look at the ``list_of_samples.tsv``:
 
-We can take a look at the ``list_of_samples.tsv``: ::
+.. code-block:: shell
 
-  $ cat list_of_samples.tsv
+  cat list_of_samples.tsv
 
 ..
     TODO: What's the output look like? Show readers so they can tell if they
@@ -232,7 +238,7 @@ The pileup summary for ``sample1`` will be generated under the directory
 
   for sample_name in sample1 sample2
   do
-    midas2.0 run_genes \
+    midas2 run_genes \
       --sample_name ${sample_name} \
       -1 reads/${sample_name}_R1.fastq.gz \
       --midasdb_name uhgg \
@@ -254,12 +260,15 @@ We can merge the per-sample CNV results:
 
 .. code-block:: shell
 
-  midas2.0 run_genes \
+  midas2 run_genes \
     --samples_list list_of_samples.tsv \
     --midasdb_name uhgg \
     --midasdb_dir my_midasdb_uhgg \
     --num_cores 4 \
     midas2_output/merge
+
+..
+  TODO: If you do quickstart correctly, this is the output you will see.
 
 
 Users may be most interested in the contents of the file

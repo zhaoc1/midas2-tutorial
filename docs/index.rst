@@ -18,6 +18,8 @@ increasingly large reference genome databases.
 MIDAS 2.0 was developed by `Chunyu Zhao <chunyu.zhao@czbiohub.org>`_
 and Boris Dimitrov in the `Pollard Lab <https://docpollard.org/>`_ at
 Chan Zuckerberg Biohub.
+MIDAS 2.0 expands on the original MIDAS developed by
+`Stephen Nayfach <snayfach@gmail.com>`_.
 
 ..
     TODO: Link CZB?
@@ -28,6 +30,9 @@ Chan Zuckerberg Biohub.
 Source code is `available on GitHub
 <https://github.com/czbiohub/MIDAS2.0.git>`_.
 
+.. note::
+
+   This project is under active development.
 
 Contents
 --------
@@ -38,10 +43,13 @@ Contents
     quickstart
     installation
     overview
+    interface
     species_module
     snv_module
     cnv_module
     download_midasdb
     advanced_topics
     wiki
+    glossary
+    acknowledgements
     template
