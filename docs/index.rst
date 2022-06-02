@@ -43,7 +43,6 @@ Contents
     quickstart
     installation
     overview
-    interface
     species_module
     snv_module
     cnv_module
