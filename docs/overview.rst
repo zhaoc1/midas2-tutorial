@@ -51,9 +51,6 @@ More information about these genome collections can be found in
 Command-line Usage
 ==================
 
-.. contents::
-   :depth: 2
-
 MIDAS 2.0 operates through a command-line interface (CLI).
 This interface enables reproducible analyses and allows MIDAS to be
 integrated into workflow management frameworks.
