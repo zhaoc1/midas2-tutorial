@@ -51,4 +51,3 @@ Contents
     advanced_topics
     glossary
     acknowledgements
-    template
