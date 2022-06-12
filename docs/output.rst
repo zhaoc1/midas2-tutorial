@@ -1,23 +1,15 @@
 
 .. _midas2_wiki:
 
-MIDAS 2.0 Wiki
-==============
-
-.. contents::
-   :depth: 4
-
-
-.. _target_layout:
-
-MIDAS 2.0 Results Layout
-************************
+##########################################
+Output Files and Directory Layout
+##########################################
 
 In this section we refer to the output directory for single-sample as ``midas_output/sample_name``, and across-samples as ``midas_output``.
 More details can be found at :ref:`this page<common_cli_options>`.
 
 Single-Sample Results Layout
-----------------------------
+============================
 
 MIDAS 2.0 analysis usually starts with species selection which selects sufficiently abundant species in each sample (command ``run_species``).
 After completing this step, users can run either of two strain-level analysis: ``run_snps`` for single-sample read pileup (SNV module) or
@@ -53,7 +45,7 @@ Here is an example of the results layout of all single-sample analysis in the lo
 
 
 Across-Samples Results Layout
------------------------------
+=============================
 
 For a collection of samples, population SNV and pan-genome CNV can be estimated using subcommands ``merge_snps`` and ``merge_genes``.
 
@@ -83,7 +75,7 @@ For a collection of samples, population SNV and pan-genome CNV can be estimated 
 .. _db_layout:
 
 MIDAS Reference Database Layout
-*******************************
+===============================
 
 To meet the challenge of increased number of available genome sequences,
 MIDAS 2.0 implemented a new database infrastructure, geared to run on `AWS Batch <https://aws.amazon.com/batch/>`_

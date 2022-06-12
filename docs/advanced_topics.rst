@@ -1,4 +1,3 @@
-
 Advanced Topics
 ===============
 
@@ -168,7 +167,7 @@ MIDAS 2.0 builds sample-specific rep-genome or pan-genome index for species in t
 However, we recognize the needs of using one comprehensive list of species across samples in the same study.
 And in this section, we will go over the steps of building one genome index a list of customized species across a given panel of samples.
 
-We presuppose users have already completed the :ref:`across-samples species profiling<species_prevalence>`
+We presuppose users have already completed the :ref:`across-samples species profiling<species_module>`
 and have ``midas2_output/merge/species/species_prevalence.tsv`` ready for the given panel of samples.
 
 Species Selection
