@@ -73,13 +73,13 @@ For example, in :ref:`Quickstart<demo_midas_ourdir>`, ``midas2_output`` is the c
 Single-sample Commands
 ----------------------
 
-The three single-sample commands (``run_species``, ```run_snps`` and ``run_genes``) share a number of command-line flags.
+The three single-sample commands (``run_species``, ``run_snps`` and ``run_genes``) share a number of command-line flags.
 
 Sample Name
 +++++++++++
 
 Users need to chose a unique ``sample_name`` per sample, and together with the output directory,
-``midas2_output/sample_name1`` constitutes the unique output directory for single-sample analyses.
+``midas2_output/sample_name`` constitutes the unique output directory for single-sample analyses.
 
 
 Input Reads
@@ -96,7 +96,9 @@ Across-samples Commands
 -----------------------
 
 A tab-separated sample manifest file listing the ``sample_name`` and full path of the single-sample root output directory
-``midas_output`` is required for across-samples analyses. And users need to pass the path of this file to the command-line argument ``--sample_list``.
+``midas_output`` is required for across-samples analyses.
+
+Users need to pass the path of this file to the command-line argument ``--sample_list``.
 For example, in the Quickstart, we passed as following: ``--sample_list list_of_samples.tsv``.
 
 
@@ -110,8 +112,8 @@ A template is shown here:
   sample2,/home/ubuntu/MIDAS2.0/tests/midas2_output
 
 
-MIDASDB
--------
+MIDAS Reference Database
+------------------------
 
 For all MIDAS 2.0 analysis, users need to choose
 
