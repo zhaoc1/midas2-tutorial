@@ -21,18 +21,10 @@ Chan Zuckerberg Biohub.
 MIDAS 2.0 expands on the original MIDAS developed by
 `Stephen Nayfach <snayfach@gmail.com>`_.
 
-..
-    TODO: Link CZB?
-    TODO: Replace use of "MIDAS 2.0" where it's obvious you're talking
-    about the current software with only "MIDAS". The "2.0" is self-evident
-    in most cases (the above paragraphs being one of the few exceptions).
 
 Source code is `available on GitHub
 <https://github.com/czbiohub/MIDAS2.0.git>`_.
 
-.. note::
-
-   This project is under active development.
 
 Contents
 --------

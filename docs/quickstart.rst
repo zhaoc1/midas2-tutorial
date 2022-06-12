@@ -8,9 +8,6 @@ Setup
 Install MIDAS 2.0
 -----------------
 
-..
-    Does MacOS not work? Maybe just _not_ Windows?
-
 On a Linux machine, download a copy of MIDAS 2.0 from our GitHub repository, and
 install the dependencies. We do not currently support non-Linux environments.
 
@@ -20,21 +17,25 @@ install the dependencies. We do not currently support non-Linux environments.
     I guess part of the goal here is to get all of the test reads which are saved to
     github...
 
+
 .. code-block:: shell
 
-  $ git clone https://github.com/czbiohub/midas2.0.git
+  $ git clone https://github.com/czbiohub/MIDAS2.0.git
   $ cd MIDAS2.0
 
   $ conda env create -n midas2.0 -f midas2.yml
+  $ conda activate midas2.0
   $ cpanm Bio::SearchIO::hmmer --force # Temporary fix for Prokka
 
-  $ conda activate midas2.0
+Install MIDAS2.0.
+
+.. code-block:: shell
+
   $ pip install .
 
 
-Alternative installation procedures are also
-:doc: `described elsewhere <installation>`_.
-However, we'll be using test files kept in this git repository.
+Alternative installation procedures are also :ref:`described elsewhere<installation>`.
+
 
 .. _example_data:
 
@@ -60,8 +61,9 @@ Pre-download SCG Genes
     otherwise I think it fits the quickstart mentality to use
     as much of the automated stuff as possible.
 
-Download the universal single copy genes for MIDAS reference database (MIDAS DB) of ``uhgg``
-to a new folder called ``my_midasdb_uhgg`` ::
+
+Download the universal single copy genes for MIDAS Reference Database (MIDAS DB) of ``uhgg``
+to a new subfolder called ``my_midasdb_uhgg`` ::
 
   $ midas2 database --init --midasdb_name uhgg --midasdb_dir my_midasdb_uhgg
 
@@ -71,6 +73,8 @@ to a new folder called ``my_midasdb_uhgg`` ::
     database download when they want to run MIDAS on different project...
     TODO: Is there a similar issue with using the _installation_ detailed above?
     Will users need to uninstall and re-install for some reason?
+
+..
     TODO: Add links to the more completely explanations of each step
     elsewhere in the wiki.
 
@@ -95,15 +99,6 @@ genes in order to identify abundant species in each sample.
         --num_cores 4 \
         midas2_output
     done
-
-..
-    TODO: Removing as many of the arguments as possible would be ideal, since this
-    is supposed to be the "simplest possible" run. However, the only arg that
-    seems removable is num_cores...
-    TODO: (Software) Consider renaming --num_cores to --num-cores. The latter
-    is the UNIX standard for long option names. For backwards compatibility
-    you'll want to leave the underscore form, but most users will expect a
-    dash for word breaks in argument names.
 
 
 Single-nucleotide Variant Analysis
@@ -131,32 +126,25 @@ We'll next run the single-sample SNV analysis for each sample.
       midas2_output
   done
 
-The pileup summary for, ``sample1`` is written to
+The pileup summary for ``sample1`` is written to
 ``midas2_output/sample1/snps/snps_summary.tsv``.
 This file summarizes the read mapping
 and pileup results for each of the abundant species determined in the previous
 step.
 By default, species are selected based on the filter:
-``median_marker_coverage > 2``.
-
-..
-    TODO: Link to detailed information about this filtering.
+``median_marker_coverage > 2``. More details about abundant species selection can
+be referred :ref:`here<abundant_species_selection>`.
 
 
-Compile SNVs across samples
----------------------------
-
-..
-    TODO: "Across-samples" is a bit clunky as a descriptor of this step.
-    To my ear, something like "cross-sample" or "multi-sample" or writing it
-    all the way out as "SNV calling across multiple samples" would be
-    the more obvious phrasing.
+Compute Population SNVs across multiple samples
+-----------------------------------------------
 
 .. _prepare_sample_list:
 
 
-In order to combine SNV results from multiple samples, we'll first
-construct a tab-separated sample "manifest" file.
+In order to compute population SNV from multiple single-sample pileup results, we first
+need to construct a tab-separated **sample manifest file**: ``list_of_samples.tsv``.
+
 This file has a column for the ``sample_name`` and another for
 ``midas_output``, and is required for multi-sample analyses.
 
@@ -176,26 +164,17 @@ We can take a look at the ``list_of_samples.tsv``:
 .. code-block:: shell
 
   cat list_of_samples.tsv
-
-..
-    TODO: What's the output look like? Show readers so they can tell if they
-    messed something up in the previous step.
+  sample_name	midas_outdir
+  sample1	midas2_output
+  sample2	midas2_output
 
 
 Based on this output, we can run ``merge_snps`` and MIDAS 2.0 will know to
 look at ``midas2_output/sample1/snps/snps_summary.tsv`` for the ``run_snps``
 output from sample1.
 
-..
-    (Software) Is there a reason the user needs to manually construct the path to
-    the MIDAS output directories? Seems like just a list of sample names
-    and the output directory passed as a command argument should be enough to
-    guess the path...
-    If there are major use-cases for user-specified output paths then I'm not
-    aware of them. Perhaps this should be opt-in...
 
-
-Now we are ready to compute the population SNVs across the two samples:
+Now we are ready to compute the population SNVs across these two samples:
 
 .. code-block:: shell
 
@@ -207,22 +186,21 @@ Now we are ready to compute the population SNVs across the two samples:
     --num_cores 4 \
     midas2_output/merge
 
-..
-    As above, it would be good to remove as many of the unecessary CLI
-    options as possible.
-    (Software) It would be good to have reasonable defaults for all of these.
-    Currently, every MIDAS requires a bunch of identical options every single
-    command. This means there are more opportunities for typos and the
-    shell history gets messy.
 
-Users may be most interested in the contents of the file
-``midas2_output/merge/TODO`` written in this step.
+Users may be interested in the contents of the file
+``midas2_output/merge/snps_summary.tsv`` written in this step.
 
-..
-    TODO: Quickly show the contents of this most-important output file.
+.. code-block:: shell
+
+  cat midas2_output/merge/snps_summary.tsv
+  sample_name	species_id	genome_length	covered_bases	total_depth	aligned_reads	mapped_reads	fraction_covered	mean_coverage
+  sample1	102454	2762447	2322823	15271923	145639	131992	0.841	6.575
+  sample2	102454	2762447	2322823	15270765	145639	131982	0.841	6.574
+
 
 Other output files and the full output directory structure can be found at
 :doc:`output`.
+
 
 Copy-number Variant Analysis
 **********************************
@@ -230,9 +208,26 @@ Copy-number Variant Analysis
 Identify CNVs in Each Sample
 ----------------------------
 
-We first run the single-sample CNV analysis for each sample.
+Since building bowtie2 indexes for the species pangenomes takes much longer time, we
+first build the bowtie2 indexes for one species (102454) to a new subfolder ``bt2_indexes/``:
+
+.. code-block:: shell
+
+  midas2 build_bowtie2db \
+    --midasdb_name uhgg --midasdb_dir my_midasdb_uhgg \
+    --species_list 102454 \
+    --bt2_indexes_name pangenomes \
+    --bt2_indexes_dir bt2_indexes \
+    --num_cores 4
+
+More information about building your own bowtie2 indexes for either representative genome (repgenome)
+or pangenome can referred :ref:`here<build_custom_genome_index>`.
+
+
+Now we can run the single-sample CNV analysis for each sample with the existing bowtie2 indexes.
 The pileup summary for ``sample1`` will be generated under the directory
 ``midas2_output/sample1/genes/genes_summary.tsv``.
+
 
 .. code-block:: shell
 
@@ -243,39 +238,43 @@ The pileup summary for ``sample1`` will be generated under the directory
       -1 reads/${sample_name}_R1.fastq.gz \
       --midasdb_name uhgg \
       --midasdb_dir my_midasdb_uhgg \
+      --prebuilt_bowtie2_indexes bt2_indexes/pangenomes \
+      --prebuilt_bowtie2_species bt2_indexes/pangenomes.species \
       --num_cores 4 \
       midas2_output
   done
 
 
-Compile CNVs across samples
----------------------------
+Compile CNVs across multiple samples
+------------------------------------
 
-..
-    TODO: Point users to the sample manifest built in the previous module.
-    If they scipped the SNV analysis, they'll still need to do that step.
-    (Consider doing that step entirely separately from the SNV and CNV modules.)
+Same with the population SNV analysis, multi-sample CNV analysis also requires a tab-separated
+:ref:`sample manifest file<prepare_sample_list>`.
 
-We can merge the per-sample CNV results:
+
+We can then merge the per-sample CNV results:
 
 .. code-block:: shell
 
-  midas2 run_genes \
+  midas2 merge_genes \
     --samples_list list_of_samples.tsv \
     --midasdb_name uhgg \
     --midasdb_dir my_midasdb_uhgg \
     --num_cores 4 \
     midas2_output/merge
 
-..
-  TODO: If you do quickstart correctly, this is the output you will see.
+
+Users may be interested in the contents of the file
+``midas2_output/merge/genes_summary.tsv`` written in this step.
 
 
-Users may be most interested in the contents of the file
-``midas2_output/merge/TODO`` written in this step.
+.. code-block:: shell
 
-..
-    TODO: Quickly show the contents of this most-important output file.
+  cat midas2_output/merge/genes_summary.tsv
+  sample_name	species_id	pangenome_size	covered_genes	fraction_covered	mean_coverage	aligned_reads	mapped_reads	marker_coverage
+  sample1	102454	129140	4004	0.031	3.495	162476	28611	3.410
+  sample2	102454	129140	4199	0.033	3.603	169286	34908	3.410
+
 
 Other output files and the full output directory structure can be found at
 :doc:`output`.
