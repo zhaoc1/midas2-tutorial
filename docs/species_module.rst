@@ -4,25 +4,27 @@
 Module: Species Selection
 #########################
 
-Reference-based metagenotyping depends crucially on the choice of reference sequences and
-incorrect mapping of reads is a major problem. Microbiome data usually contains hundreds
-of species in one sample, and an ideal reference database is both representative and
-comprehensive in terms of the species in the sample. A badly chosen reference may suffer
-both from ambiguous mapping of reads to two or more sequences or spurious mapping to
+Reference-based metagenotyping depends crucially on the choice of reference sequences.
+Microbiome data usually contains hundreds of species in one sample,
+and an ideal reference database is both representative and
+comprehensive in terms of the abundant species in the sample. A badly chosen reference may suffer
+both from ambiguous mapping of reads to two or more sequences or spurious cross-mapping to
 incorrect sequences. Therefore, a typical MIDAS 2.0 workflow starts with a species selection step,
 which filters the MIDASDB to sufficiently abundant species in each particular
 sample.
 
-Per-sample Analysis
-===================
 
-MIDAS estimates species coverage by profiling the coverage of universal,
+.. contents::
+   :depth: 3
+
+
+Single-Sample Analysis
+======================
+
+MIDAS 2.0 estimates species coverage by profiling the coverage of universal,
 single copy, taxonomic marker genes (SCGs, 15 per species), to quickly
 determine which species are abundant in the sample.
 
-..
-    TODO: Saying that you're profiling 15 genes isn't quite right. You're profiling
-    15 genes PER SPECIES.
 
 .. warning::
 
@@ -34,7 +36,7 @@ determine which species are abundant in the sample.
 
 .. code-block:: shell
 
-  MIDAS 2.0 run_species \
+  midas2 run_species \
       --sample_name sample1 \
       -1 reads/sample1_R1.fastq.gz \
       --midasdb_name uhgg \
@@ -44,21 +46,20 @@ determine which species are abundant in the sample.
 
 .. tip::
 
-   This step can be parallelized over samples (e.g. using shell background
-   processes)
+   Single-sample analysis step can be parallelized over samples (e.g. xargs)
 
 .. note::
 
-  The first time ``run_species`` is used, MIDAS will automatically download
+  The first time ``run_species`` is used, MIDAS 2.0 will automatically download
   the marker gene database.
 
 .. warning::
 
    (Race condition) If starting multiple calls to ``run_species``
    simultaneously, be sure that the marker gene database has already been
-   downloaded.
+   :ref:`downloaded<init_db>`.
    Otherwise multiple, redundant downloads may be started.
-   TODO: Link to the preload instructions here.
+
 
 Cross-Sample Merging
 =====================
@@ -77,6 +78,7 @@ profiling results for the samples listed our
     --min_cov 2 \
     midas2_output/merge
 
+
 The ``--min_cov`` flag defines the minimum ``median_marker_coverage`` for
 estimating species prevalence, which is output as the ``sample_counts``
 statistic. See below.
@@ -84,8 +86,11 @@ statistic. See below.
 Key Outputs
 ===========
 
+Single-Sample
+-------------
+
 For each sample, the primary output of the ``run_species`` command is (e.g.)
-``midas2_output/samples1/species/species_profile.tsv``
+``midas2_output/sample1/species/species_profile.tsv``
 This file describes the
 coverage of each species' marker genes in the sample.
 Species are sorted in decreasing order of ``median_marker_coverage``.
@@ -103,17 +108,21 @@ Where the columns have the following meaning:
 
 .. code-block:: text
 
-    species_id:                six-digit species id
-    marker_read_counts:        total mapped read counts
-    median_marker_coverage:    median coverage of the 15 SCGs
-    marker_coverage:           mean coverage of the 15 SCGs
-    marker_relative_abundance: computed based on ``marker_coverage``
-    unique_fraction_covered:   the fraction of uniquely mapped SCGs genes
+    species_id:                 six-digit species id
+    marker_read_counts:         total mapped read counts
+    median_marker_coverage:     median coverage of the 15 SCGs
+    marker_coverage:            mean coverage of the 15 SCGs
+    marker_relative_abundance:  computed based on ``marker_coverage``
+    unique_fraction_covered:    the fraction of uniquely mapped SCGs genes
 
-Downstream commands---``run_snps`` and ``run_genes``---use the
+
+Downstream commands (``run_snps`` and ``run_genes``) use the
 ``median_marker_coverage`` and/or ``unique_fraction_covered`` to select
-sufficiently abundant species for the downstream, single-sample SNV or CNV
-analysis.
+sufficiently abundant species. See below.
+
+
+Across-Samples
+--------------
 
 The primary output of the merging step is the file
 ``midas2_output/merge/species/species_prevalence.tsv``.
@@ -151,17 +160,19 @@ Where the columns have the following meaning:
     This also seems like a perfectly reasonable thing for users to do:
     run MIDAS multiple times with different parameters.
 
-MIDAS also writes two species-by-sample matrices in the output
+
+MIDAS 2.0 also writes two species-by-sample matrices in the output
 directory: ``midas2_output/merge/species``.
 Median marker coverage, and unique fraction covered are written to
+``midas2_output/merge/species/species_marker_median_coverage.tsv`` and
+``midas2_output/merge/species/species_unique_fraction_covered.tsv``, respectively
+
 
 ..
     (Software) Consider reformatting these outputs so that each matrix isn't a
     separate file, but rather each columns is a measure and the
     sample-by-matrix part is "stacked" into a long format.
 
-``midas2_output/merge/species/species_marker_median_coverage.tsv`` and
-``midas2_output/merge/species/species_unique_fraction_covered.tsv``, respectively
 
 .. _species_list:
 
@@ -174,7 +185,8 @@ Compiling a Species List
 
 Users may want to compile a single, comprehensive list of species across all
 samples in the same study.
-Parsing the MIDAS output files presents a convenient way to do this.
+Parsing the MIDAS 2.0 output files presents a convenient way to do this.
+
 For example, we can get the list of species that is present in at least one
 sample:
 
@@ -182,10 +194,7 @@ sample:
 
   awk '$6 > 1 {print $6}' midas2_output/merge/species/species_prevalence.tsv > all_species_list.tsv
 
-This list can then be used to download the parts of the MIDASDB needed for later analysis modules.
-
-Having finished the species selection step, we can now go to the SNV or CNV
-modules, depending on the scientific aims.
+This list can then be used to download the parts of the MIDASDB needed for later analysis modules (:ref:`link<download_midasdb>`).
 
 
 .. _abundant_species_selection:
@@ -193,15 +202,52 @@ modules, depending on the scientific aims.
 Species Selection in Downstream Modules
 =======================================
 
-By default, both the ``run_snv`` and ``run_cnv`` commands
-perform a species selection step based on the
-coverage and number of taxonomic marker genes found in the
-reads.
+..
+    This content is shared by both SNV and CNV. We should give it its own page
+    and link to it from the two modules.
+
+
+In a standard SNV/CNV workflow, only sufficiently abundant species in the
+restricted species profile will be included to build representative genome
+(rep-genome) or pan-genome index and further to be genotyped. By default,
+both the ``run_snv`` and ``run_cnv`` commands perform a species selection step.
 Both commands therefore assume that ``run_species`` has already been
 carried out for each sample.
 
-Two flags, ``--select_by`` and ``--select_threshold``, determine which species are selected ... TODO
+Two flags, ``--select_by`` and ``--select_threshold``, determine which species are selected:
 
-..
-    TODO: Add a section detailing the species filtering flags
+- ``--select_by`` followed by a comma separated list of column names in
+  ``midas2_output/species/species_profile.tsv``
+- ``--select_threshold`` followed by a comma-separated list of threshold values
+  for selection.
 
+
+For most analyses we recommend using the combination of
+``median_marker_coverage > 2X`` and ``unique_fraction_covered > 0.5``:
+
+.. code-block:: shell
+
+  --select_by median_marker_coverage,unique_fraction_covered --select_threshold=2,0.5
+
+
+Some users may wish to genotype low abundance species and should adjust the parameters accordingly:
+
+.. code-block:: shell
+
+    --select_by median_marker_coverage,unique_fraction_covered --select_threshold=0,0.5
+
+
+Alternatively, users can directly pick a list of species using the ``--species_list`` option.
+It is worth noting that the species in the provided species list are still subject to
+the ``--select_threshold`` restriction. Users can set ``--select_threshold=-1`` to
+escape species selection filters based on the species profiling:
+
+.. code-block:: shell
+
+    --species_list 102337,102506 --select_threshold=-1
+
+
+**All** the species passing the species selection filters will be genotyped.
+
+Having finished the species selection step, we can now go to the SNV or CNV
+modules, depending on the scientific aims.
