@@ -16,7 +16,12 @@ and have a species profile (e.g. ``midas2_output/sample1/species/species_profile
 ready for each sample.
 Alternatively, advanced users can pass a pre-built pangenome bowtie2 index.
 
-Per-Sample Analysis
+
+.. contents::
+   :depth: 3
+
+
+Single-Sample Analysis
 ======================
 
 Conceptually, a typical invocation of the ``run_genes`` command proceeds by
@@ -67,23 +72,24 @@ for more information about the ``--select_by`` and ``--select_threshold`` flags.
 
 .. note::
 
-  The first time ``run_genes`` is used, MIDAS will automatically download
+  In MIDAS 2.0 ``run_genes`` can automatically download
   gene collections for the selected species.
 
 .. warning::
 
    (Race condition) If starting multiple calls to ``run_genes``
    simultaneously, be sure that the gene collections have already been
-   downloaded.
+   :ref:`downloaded<init_db>`.
    Otherwise multiple redundant downloads may be started.
    TODO: Link to the preload instructions here.
 
-Cross-Sample Merging
+
+Cross-Samples Merging
 =====================
 
 Having run the single-sample CNV analysis for all the samples listed in the
 ``list_of_samples.tsv``, users next can merge the results and product a summary
-using the `merge_genes` command.
+using the ``merge_genes`` command.
 
 .. code-block:: shell
 
@@ -94,12 +100,16 @@ using the `merge_genes` command.
       --num_cores 8 \
       midas2_output/merge
 
+
 Key Outputs
 ===========
 
+Single-Sample
+-------------
+
 For each sample (e.g. here sample1)
 a summary of read alignment and CNV calling across all analyzed species
-is written to ``midas2_output/samples1/genes/genes_summary.tsv``.
+is written to ``midas2_output/sample1/genes/genes_summary.tsv``.
 
 .. csv-table::
   :align: left
@@ -124,7 +134,7 @@ Where each columns has the following meaning:
 
 
 Copy-number estimates are written to
-``midas2_output/samples1/genes/102506.genes.tsv.lz4``
+``midas2_output/sample1/genes/102506.genes.tsv.lz4``
 and include all genes covered by at least two reads.
 
 .. note::
@@ -150,17 +160,20 @@ Where columns have the following meaning:
     fraction_covered: proportion of the gene_id covered by at least one read (covered_bases / gene_length)
     copy_number:      estimated copy number of gene_id based on mapped_reads (mean_coverage / median_marker_coverage)
 
+Across-Samples
+--------------
+
 Merging across samples produces several outputs.
 
 CNV results merged across samples are written to
-``midas2_output/merge/genes/genes_summary.tsv`` 
+``midas2_output/merge/genes/genes_summary.tsv``
 
 .. csv-table::
   :align: left
 
   *sample_name*,*species_id*,*pangenome_size*,*covered_genes*,*fraction_covered*,*mean_coverage*,*aligned_reads*,*mapped_reads*,*marker_coverage*
-  sample1,100122,  29165,,   2535,,   0.087,,, 4.723,,  263395,, 53006,, 1.435
-  sample2,100122,  29165,,   3212,,   0.110,,, 16.095,, 1447684,,263878,,10.713
+  sample1,100122,29165,2535,0.087,4.723,263395,53006,1.435
+  sample2,100122,9165,3212,0.110,16.095,1447684,263878,10.713
 
 Besides ``sample_name``, which indexes the entries, the other
 columns (``pangenome_size`` through ``marker_coverage``) are the same as in the
@@ -190,11 +203,9 @@ Similarly, a presence absence matrix is written to
    UHGG000587_00962,1,0
 
 
-Raw coverage data is reported in the same matrix form in
+Raw vertical coverage data is reported in the same matrix form in
 ``midas2_output/merge/genes/102506.genes_depth.tsv.lz4``.
 
-..
-    TODO: Does "coverage" == vertical coverage ("depth")?
 
 .. csv-table::
   :align: left
@@ -208,8 +219,8 @@ Raw coverage data is reported in the same matrix form in
 Advanced CNV Calling
 ====================
 
-Adjust Single-Sample Post-alignment Filter
-------------------------------------------
+Single-Sample Post-alignment Filter
+-----------------------------------
 
 Users can adjust post-alignment quality filter parameters via the command-line options (default vlaues indicated):
 

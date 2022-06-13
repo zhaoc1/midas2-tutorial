@@ -16,6 +16,7 @@ ready for each sample.
 Alternatively, advanced users can pass a :ref:`pre-built representative genome index<build_custom_genome_index>`
 ready for single-sample SNV analysis.
 
+
 .. contents::
    :depth: 3
 
@@ -72,8 +73,8 @@ for more information about the ``--select_by`` and ``--select_threshold`` flags.
    Otherwise multiple redundant downloads may be started.
 
 
-Cross-Sample Analysis
-=====================
+Cross-Samples Analysis
+======================
 
 After running all samples individually in this way, users can then
 compute population SNVs across samples using the ``merge_snps`` command.
