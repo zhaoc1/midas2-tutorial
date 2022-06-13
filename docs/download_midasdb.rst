@@ -3,8 +3,16 @@
 Downloading the MIDASDB
 =======================
 
-MIDAS Reference Database (MIDASDB) is comprised of representative genomes,
-species pangenomes, and marker genes. For MIDAS 2.0, we have already built two
+MIDAS Reference Database (MIDASDB) is comprised of three components: representative genomes,
+species pangenomes, and marker genes.
+
+
+.. figure:: images/Fig2.MIDASDB.png
+  :width: 800px
+  :align: center
+
+
+For MIDAS 2.0, we have already built two
 MIDASDBs from large, public, microbial genome databases:
 
 .. code-block:: shell

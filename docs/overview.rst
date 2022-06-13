@@ -18,6 +18,10 @@ MIDAS 2.0 contains two analysis modules focused on:
 Each module includes two sequential steps: single-sample analysis and
 cross-samples merging.
 
+.. figure:: images/Fig1.MIDAS2.0.png
+  :width: 800px
+  :align: center
+
 
 MIDAS Reference Database
 ========================
