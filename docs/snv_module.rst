@@ -13,14 +13,15 @@ The first step can be run in parallel. We assume users have already completed
 the :ref:`species module<species_module>` and have
 a species profile (e.g. ``midas2_output/sample1/species/species_profile.tsv``)
 ready for each sample.
-Alternatively, advanced users can pass a pre-built representative genome index
+Alternatively, advanced users can pass a :ref:`pre-built representative genome index<build_custom_genome_index>`
 ready for single-sample SNV analysis.
 
-..
-    TODO: Add :ref: to pre-built index docs
+.. contents::
+   :depth: 3
 
-Per-Sample Analysis
-===================
+
+Single-Sample Analysis
+======================
 
 Conceptually, a typical invocation of the ``run_snps`` command proceeds by
 
@@ -32,7 +33,7 @@ Conceptually, a typical invocation of the ``run_snps`` command proceeds by
 #.  outputting a read mapping summary and pileup result for each representative
     genome (i.e. each species).
 
-MIDAS 2.0 purposely holds off any filtering or identification of variant
+MIDAS 2.0 purposely **holds off any filtering** or identification of variant
 positions until the subsequent cross-sample analysis.
 
 (In this document, we continue to use the :ref:`data<example_data>` from the
@@ -50,7 +51,7 @@ Quickstart as an example.)
     --num_cores 8 \
     midas2_output
 
-See the documentation on `selecting abundant species <abundant_species_selection>`_
+See the documentation on :ref:`selecting abundant species<abundant_species_selection>`
 for more information about the ``--select_by`` and ``--select_threshold`` flags.
 
 .. tip::
@@ -60,22 +61,22 @@ for more information about the ``--select_by`` and ``--select_threshold`` flags.
 
 .. note::
 
-  The first time ``run_snps`` is used, MIDAS will automatically download
+  In MIDAS 2.0, ``run_snps`` can automatically download
   the reference genomes for the selected species.
 
 .. warning::
 
    (Race condition) If starting multiple calls to ``run_snps``
    simultaneously, be sure that reference genomes have already been
-   downloaded.
+   :ref:`downloaded<init_db>`.
    Otherwise multiple redundant downloads may be started.
-   TODO: Link to the preload instructions here.
+
 
 Cross-Sample Analysis
 =====================
 
 After running all samples individually in this way, users can then
-merge and analyze SNVs across samples using the ``merge_snps`` command.
+compute population SNVs across samples using the ``merge_snps`` command.
 
 .. code-block:: shell
 
@@ -90,9 +91,12 @@ merge and analyze SNVs across samples using the ``merge_snps`` command.
 Key Outputs
 ===========
 
+Single-Sample
+-------------
+
 Unlike the :ref:`species <species_module>` and :ref:`CNV <cnv_module>` modules,
 the single-sample outputs from the SNV module are less interesting than the
-merged results.
+merged results (at least with the default mode).
 
 ..
     TODO: Link the merged section
@@ -101,7 +105,7 @@ Users may, however, find several files useful.
 
 A summary of read alignment and pileups for each of the genomes included in the
 (usually sample-specific) bowtie2 index is reported in
-``midas2_output/samples1/snps/snps_summary.tsv``.
+``midas2_output/sample1/snps/snps_summary.tsv``.
 
 .. csv-table::
   :align: left
@@ -126,7 +130,7 @@ Where each columns has the following meaning:
 
 For each sample and species---e.g. here sample1 and species 102506
 (*E. coli*)---the per-species read pileup is found in
-``midas2_output/samples1/snps/102506.snps.tsv.lz4``.
+``midas2_output/sample1/snps/102506.snps.tsv.lz4``.
 Positions are filtered to only sites in the reference genome covered by at
 least two reads.
 
@@ -162,7 +166,11 @@ Where the columns have the following meaning:
 ..
     TODO: Explain what the filtering is? What does post-filtered mean?
 
-A number of outputs result from the cross-sample analysis.
+
+Across-Samples
+--------------
+
+A number of outputs result from the multiple samples population SNV analysis.
 
 A merged pileup summary is found in ``midas2_output/merge/snps/snps_summary.tsv``.
 
@@ -173,11 +181,9 @@ A merged pileup summary is found in ``midas2_output/merge/snps/snps_summary.tsv`
     sample1,100122,2560878,2108551,10782066,248700,207047,0.823,5.113
     sample2,100122,2560878,2300193,39263110,1180505,820736,0.898,17.069
 
-The reported columns ``genome_length``:``mean_coverage`` are the same as from
+The reported columns from ``genome_length`` to ``mean_coverage`` are the same as from
 the single-sample SNV summary.
 
-..
-    TODO: Add descriptions for the other columns?
 
 For each species, information about SNVs identified across samples is written
 to ``midas2_output/merge/snps/102506.snps_info.tsv.lz4``.
@@ -245,69 +251,12 @@ A site-by-sample read depth matrix is written to
   gnl|Prokka|UHGG000587_11|83994|T,13,43
   gnl|Prokka|UHGG000587_14|34360|A,10,26
 
-..
-    TODO: The below still needs to be reorganized.
 
 Advanced SNV Calling
 ====================
 
-..
-    Most of this content should go into the "Advanced Usage" page/section.
-    Keep the main SNV Modules page just to standard usage and key outputs.
-
-.. _species_for_genotype:
-
-Species for Genotype
---------------------
-
-..
-    This content is shared by both SNV and CNV. We should give it its own page
-    and link to it from the two modules.
-
-In a standard SNV/CNV workflow, only sufficiently abundant species in the
-restricted species profile will be included to build representative genome
-(rep-genome) or pan-genome index and further to be genotyped. In order to use
-the species marker genes profiles to select species for index building in the
-``run_snps`` and ``run_genes`` commands, we need to pass flags specifying the
-following parameters:
-
-- ``--select_by`` followed by a comma separated list of column names in
-  ``midas2_output/species/species_profile.tsv``
-- ``--select_threshold`` followed by a comma-separated list of threshold values
-  for selection.
-
-
-For most analyses we recommend using the combination of
-``median_marker_coverage > 2X`` and ``unique_fraction_covered > 0.5``:
-
-.. code-block:: shell
-
-  --select_by median_marker_coverage,unique_fraction_covered --select_threshold=2,0.5
-
-
-Some users may wish to genotype low abundance species and should adjust the parameters accordingly:
-
-.. code-block:: shell
-
-    --select_by median_marker_coverage,unique_fraction_covered --select_threshold=0,0.5
-
-
-Alternatively, users can directly pick a list of species using the ``--species_list`` option.
-It is worth noting that the species in the provided species list are still subject to
-the ``--select_threshold`` restriction. Users can set ``--select_threshold=-1`` to
-escape species selection filters based on the species profiling:
-
-.. code-block:: shell
-
-    --species_list 102337,102506 --select_threshold=-1
-
-
-**All** the species passing the above mentioned filters will be genotyped in either single-sample SNV or single-sample CNV module.
-
-
-
-Adjust Single-Sample Post-alignment Filter
-------------------------------------------
+Single-Sample Post-alignment Filter
+-----------------------------------
 
 Users can adjust post-alignment filters via the following command-line options (default values indicated):
 
@@ -337,12 +286,15 @@ Users can adjust post-alignment filters via the following command-line options (
 Single-Sample Advanced SNV Calling
 ----------------------------------
 
-In recognition of the need for single-sample variant calling, we provided ``--advanced`` option to users for single-sample variant calling for all the species in the rep-genome index
+In recognition of the need for single-sample variant calling,
+we provided ``--advanced`` option to users for single-sample variant calling for all the species in the rep-genome index
 with ``run_snps`` command.
 
-In the ``--advanced`` mode, per-species pileup results will also report major allele and minor allele for all the genomic sites covered by at least two post-filtered reads,
+In the ``--advanced`` mode, per-species pileup results will also report major allele and minor allele
+for all the genomic sites covered by at least two post-filtered reads,
 upon which custom variant calling filter can be applied by the users.
-Users are advised to use the setting ``--ignore_ambiguous`` to avoid falsely calling major/minor alleles for sites with tied read counts.
+Users are advised to use the setting ``--ignore_ambiguous`` to avoid falsely
+calling major/minor alleles for sites with tied read counts.
 
 .. code-block:: shell
 
@@ -391,7 +343,8 @@ The species, sample, and site filters for the across-samples SNV calling can be 
 
     --genome_coverage 0.4 --genome_depth 3 --sample_counts 30
 
--   We can apply the following site selections: only consider site with ``read depth >= 5``, and ``read depth <= 3 * genome_depth``, and the minimal allele frequency to call an allele present is 0.05.
+-   We can apply the following site selections: only consider site with ``read depth >= 5``, and ``read depth <= 3 * genome_depth``,
+and the minimal allele frequency to call an allele present is 0.05.
 
 .. code-block:: shell
 
