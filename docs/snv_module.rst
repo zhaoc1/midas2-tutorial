@@ -344,8 +344,7 @@ The species, sample, and site filters for the across-samples SNV calling can be 
 
     --genome_coverage 0.4 --genome_depth 3 --sample_counts 30
 
--   We can apply the following site selections: only consider site with ``read depth >= 5``, and ``read depth <= 3 * genome_depth``,
-and the minimal allele frequency to call an allele present is 0.05.
+-   We can apply the following site selections: only consider site with ``read depth >= 5``, and ``read depth <= 3 * genome_depth``, and the minimal allele frequency to call an allele present is 0.05.
 
 .. code-block:: shell
 

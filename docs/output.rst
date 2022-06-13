@@ -6,7 +6,7 @@ Output Files and Directory Layout
 ##########################################
 
 In this section we refer to the output directory for single-sample as ``midas_output/sample_name``, and across-samples as ``midas_output``.
-More details can be found at :ref:`this page<common_cli_options>`.
+Input command-line options can be found at :ref:`this page<common_cli_options>`.
 
 Single-Sample Results Layout
 ============================

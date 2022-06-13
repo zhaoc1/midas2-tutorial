@@ -96,8 +96,8 @@ The target layout of MIDASDB can be found at :ref:`MIDASDB Layout<db_layout>`.
 This section is focused specifically on the database construction commands.
 
 
-TOC
----
+Table of Content
+----------------
 
 To start with, users need to organize the genomes in a specific format and produce the TOC ``genomes.tsv`` as described in the MIDASDB Layout.
 
@@ -159,6 +159,8 @@ Third, build species pangenomes:
     --debug --force
 
 
+.. _build_custom_genome_index:
+
 Build Your Own Genome Index
 ***************************
 
@@ -187,11 +189,11 @@ In this section, we will keep using the :ref:`example data<example_data>` from Q
     --midasdb_name uhgg --midasdb_dir my_midasdb_uhgg \
     --select_by sample_counts \
     --select_threshold 2 \
-    --bt2_indexes_name repgenome \
+    --bt2_indexes_name repgenomes \
     --bt2_indexes_dir one_bt2_indexes \
     --num_cores 8
 
-And users can locate the generated rep-genome database at ``one_bt2_indexes/repgenome``, and the list of species in the rep-genome is at ``one_bt2_indexes/repgenome.species``.
+And users can locate the generated rep-genome database at ``one_bt2_indexes/repgenomes``, and the list of species in the rep-genome is at ``one_bt2_indexes/repgenomes.species``.
 
 Use Prebuilt Genome Index
 -------------------------
@@ -205,8 +207,8 @@ If taking this approach, for the single-sample SNV or CNV analysis, users can pa
     -1 reads/sample1_R1.fastq.gz \
     --midasdb_name uhgg \
     --midasdb_dir my_midasdb_uhgg \
-    --prebuilt_bowtie2_indexes one_bt2_indexes/repgenome \
-    --prebuilt_bowtie2_species one_bt2_indexes/repgenome.species \
+    --prebuilt_bowtie2_indexes one_bt2_indexes/repgenomes \
+    --prebuilt_bowtie2_species one_bt2_indexes/repgenomes.species \
     --select_threshold=-1 \
     --num_cores 8 \
     ${midas_output}

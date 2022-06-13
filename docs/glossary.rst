@@ -11,8 +11,6 @@ Glossary
 
 -   **MIDASDB**: The pre-processed reference data in a format to be consumed by the MIDAS 2.0 modules, including marker genes, reference genomes, pangenomes, etc.
 
--   **Genome collections**: TODO
-
 -   **genome Index**: Rather than bowtie2 database or some other ambiguous term
 
 -   **Species-level pangenome**: refers to the set of non-redundant genes (centroids) clustered from all the genomes within one species cluster.

@@ -83,6 +83,7 @@ The ``--min_cov`` flag defines the minimum ``median_marker_coverage`` for
 estimating species prevalence, which is output as the ``sample_counts``
 statistic. See below.
 
+
 Key Outputs
 ===========
 
@@ -121,6 +122,7 @@ Downstream commands (``run_snps`` and ``run_genes``) use the
 sufficiently abundant species. See below.
 
 
+.. _across_samples_species_profile:
 Across-Samples
 --------------
 
@@ -172,29 +174,6 @@ Median marker coverage, and unique fraction covered are written to
     (Software) Consider reformatting these outputs so that each matrix isn't a
     separate file, but rather each columns is a measure and the
     sample-by-matrix part is "stacked" into a long format.
-
-
-.. _species_list:
-
-Compiling a Species List
-========================
-
-..
-    TODO: Link and back-link this page to/from the download_midasdb page as
-    part of an explanation about where the species list comes from.
-
-Users may want to compile a single, comprehensive list of species across all
-samples in the same study.
-Parsing the MIDAS 2.0 output files presents a convenient way to do this.
-
-For example, we can get the list of species that is present in at least one
-sample:
-
-.. code-block:: shell
-
-  awk '$6 > 1 {print $6}' midas2_output/merge/species/species_prevalence.tsv > all_species_list.tsv
-
-This list can then be used to download the parts of the MIDASDB needed for later analysis modules (:ref:`link<download_midasdb>`).
 
 
 .. _abundant_species_selection:
